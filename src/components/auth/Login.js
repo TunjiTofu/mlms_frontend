@@ -7,6 +7,7 @@ import {
   CardContent,
   TextField,
   Button,
+  Alert,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
@@ -16,10 +17,16 @@ import {useStyles} from "../../Styles/AuthStyle";
 import {Box} from "@mui/system";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import {useAuth} from "../../context/AuthContext";
+import {useHistory} from "react-router";
 
 function Login({handleChange}) {
   const classes = useStyles();
+  const {login} = useAuth();
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const initialVal = {
     username: "",
@@ -37,12 +44,16 @@ function Login({handleChange}) {
 
   const onSubmit = (val, onSubmitProps) => {
     setLoading(true);
-    setTimeout(() => {
-      console.log("Welcome");
-      console.log(val);
-      setLoading(false);
-      onSubmitProps.setSubmitting(false);
-    }, 1000);
+    login(val.username, val.password)
+      .then((res) => {
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        setError(err.message);
+        console.log(err.message);
+      });
+    setLoading(false);
+    onSubmitProps.setSubmitting(false);
   };
 
   return (
@@ -56,7 +67,11 @@ function Login({handleChange}) {
             <Typography variant="h6">SW MLMS</Typography>
             <Typography variant="subtitle1">Please Login!</Typography>
           </Grid>
-
+          {error && (
+            <Alert severity="warning">
+              Error! <strong>{error}</strong>
+            </Alert>
+          )}
           <Formik
             initialValues={initialVal}
             validationSchema={validationSchema}
