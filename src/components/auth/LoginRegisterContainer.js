@@ -34,7 +34,7 @@ function LoginRegisterContainer() {
 
   return (
     <div>
-      <Container maxWidth="xs">
+      <Container maxWidth="sm">
         <Paper elevation={4} className={classes.LoginContainerPaper}>
           <Tabs
             value={value}

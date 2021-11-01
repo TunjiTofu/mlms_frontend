@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   TextField,
-  Button,
   Alert,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -17,15 +16,16 @@ import {useStyles} from "../../Styles/AuthStyle";
 import {Box} from "@mui/system";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import {useAuth} from "../../context/AuthContext";
 import {useHistory} from "react-router";
+import FormErrors from "../FormErrors";
 
 function Login({handleChange}) {
   const classes = useStyles();
   const {login} = useAuth();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [error, setError] = useState("");
 
   const initialVal = {
@@ -44,15 +44,21 @@ function Login({handleChange}) {
 
   const onSubmit = (val, onSubmitProps) => {
     setLoading(true);
-    login(val.username, val.password)
-      .then((res) => {
-        history.push("/dashboard");
-      })
-      .catch((err) => {
-        setError(err.message);
-        console.log(err.message);
-      });
-    setLoading(false);
+    setLoading2(true);
+    setTimeout(() => {
+      login(val.username, val.password)
+        .then((res) => {
+          history.push("/dashboard");
+        })
+        .catch((err) => {
+          setError(err.message);
+          // console.log(err.message);
+        });
+      setLoading(false);
+      setLoading2("");
+    }, 2000);
+
+    onSubmitProps.resetForm();
     onSubmitProps.setSubmitting(false);
   };
 
@@ -72,6 +78,12 @@ function Login({handleChange}) {
               Error! <strong>{error}</strong>
             </Alert>
           )}
+          {loading2 && (
+            <Alert severity="info">
+              Loading!{" "}
+              <strong>Please wait while we take you to your dashboard!</strong>
+            </Alert>
+          )}
           <Formik
             initialValues={initialVal}
             validationSchema={validationSchema}
@@ -82,16 +94,19 @@ function Login({handleChange}) {
                 <Form>
                   <Field
                     as={TextField}
-                    label="Username"
+                    label="Email"
                     name="username"
                     type="email"
-                    placeholder="Enter Username"
+                    placeholder="Enter Email Address"
                     variant="standard"
                     fullWidth
                     margin="normal"
                     color="secondary"
                     size="small"
-                    helperText={<ErrorMessage name="username" />}
+                    required
+                    helperText={
+                      <ErrorMessage name="username" component={FormErrors} />
+                    }
                   />
 
                   <Field
@@ -105,18 +120,11 @@ function Login({handleChange}) {
                     margin="normal"
                     color="secondary"
                     size="small"
-                    helperText={<ErrorMessage name="password" />}
+                    required
+                    helperText={
+                      <ErrorMessage name="password" component={FormErrors} />
+                    }
                   />
-
-                  {/* <Button
-                    type="submit"
-                    variant="contained"
-                    size="small"
-                    disabled={formik.isSubmitting}
-                  >
-                    {formik.isSubmitting ? "Loading..." : "Login"}
-                  </Button> */}
-
                   <Box mt={2} mb={2}>
                     <LoadingButton
                       // onClick={handleClick}
