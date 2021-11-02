@@ -15,16 +15,15 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel,
-  Input,
   Button,
 } from "@mui/material";
 import {Box} from "@mui/system";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import React, {useRef, useState} from "react";
-import {useHistory} from "react-router";
+// import {useHistory} from "react-router";
 import axios from "axios";
-import {useAuth} from "../../context/AuthContext";
+// import {useAuth} from "../../context/AuthContext";
 import {useStyles} from "../../Styles/AuthStyle";
 import FormErrors from "../FormErrors";
 import PreviewImage from "../PreviewImage";
@@ -32,8 +31,7 @@ import {styled} from "@mui/styles";
 
 function Register({handleChange}) {
   const classes = useStyles();
-  const {login} = useAuth();
-  const history = useHistory();
+  // const {login} = useAuth();
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [error, setError] = useState("");
@@ -53,6 +51,7 @@ function Register({handleChange}) {
     displayName: "",
     sname: "",
     oname: "",
+    role:'',
     phoneNumber: "",
     password: "",
     conf_password: "",
@@ -92,7 +91,7 @@ function Register({handleChange}) {
       .min(6, "Your password must be at least 6 characters")
       .required("This Field is Required"),
     file: Yup.mixed()
-      .required("This is a required field")
+      .required("Please upload a profile picture")
       .test(
         "FILE_SIZE",
         "Uploaded file is too large.",
@@ -186,7 +185,7 @@ function Register({handleChange}) {
             <Avatar sx={{bgcolor: "#039bef"}}>
               <PersonAddOutlined />
             </Avatar>
-            <Typography variant="h6">SW MLMS</Typography>
+            <Typography variant="h6">PWA MLMS</Typography>
             <Typography variant="subtitle1">Please Register!</Typography>
           </Grid>
           {error && (
@@ -329,6 +328,7 @@ function Register({handleChange}) {
                         component="fieldset"
                         margin="dense"
                         required
+                        color="secondary"
                         fullWidth
                       >
                         <FormLabel component="legend">Register as</FormLabel>
@@ -422,11 +422,12 @@ function Register({handleChange}) {
                       <Button
                         variant="contained"
                         fullWidth
+                        size="small"
                         onClick={() => {
                           fileRef.current.click();
                         }}
                       >
-                        Upload Profile Picture
+                        Click to Upload Profile Picture
                       </Button>
                     </Grid>
 
@@ -445,7 +446,6 @@ function Register({handleChange}) {
                       variant="contained"
                       size="small"
                       fullWidth
-                      className={classes.loginBtn}
                       disabled={values.isSubmitting}
                     >
                       {/* {formik.isSubmitting ? setLoading(true) : "Login"} */}
