@@ -15,16 +15,20 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel,
+  Input,
+  Button,
 } from "@mui/material";
 import {Box} from "@mui/system";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {useHistory} from "react-router";
 import axios from "axios";
 import {useAuth} from "../../context/AuthContext";
 import {useStyles} from "../../Styles/AuthStyle";
 import FormErrors from "../FormErrors";
+import PreviewImage from "../PreviewImage";
+import {styled} from "@mui/styles";
 
 function Register({handleChange}) {
   const classes = useStyles();
@@ -35,6 +39,15 @@ function Register({handleChange}) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+  // const [profilePicBase64, setProfilePicBase64] = useState("");
+
+  const Input = styled("input")({
+    display: "none",
+  });
+
+  const fileRef = useRef(null);
+
   const initialVal = {
     email: "",
     displayName: "",
@@ -43,6 +56,7 @@ function Register({handleChange}) {
     phoneNumber: "",
     password: "",
     conf_password: "",
+    file: null,
   };
 
   const validationSchema = Yup.object().shape({
@@ -77,45 +91,90 @@ function Register({handleChange}) {
       .oneOf([Yup.ref("password"), ""], "Password Mismatch")
       .min(6, "Your password must be at least 6 characters")
       .required("This Field is Required"),
+    file: Yup.mixed()
+      .required("This is a required field")
+      .test(
+        "FILE_SIZE",
+        "Uploaded file is too large.",
+        (value) => !value || (value && value.size <= 200 * 200)
+      )
+      .test(
+        "FILE_FORMAT",
+        "Uploaded file format unsupported,",
+        (value) => !value || (value && SUPPORTED_FORMATS.includes(value?.type))
+      ),
   });
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   const onSubmit = (val, onSubmitProps) => {
+    // console.log(val);
     setLoading(true);
     setLoading2(true);
 
-    const formData = {
-      email: val.email,
-      password: val.password,
-      displayName: val.displayName,
-      phoneNumber: val.phoneNumber,
-      role: val.role,
-      status: "pending",
-      sname: val.sname,
-      oname: val.oname,
-    };
-    // console.log("All Dataa - " + JSON.stringify(formData));
-    const apiUrl = "https://us-central1-mlms-ec62a.cloudfunctions.net/userReg";
+    //Conver image to Base64 by calling function
+    convertToBase64(val.file)
+      .then((file) => {
+        // console.log("Base 64 ---- " + file);
+        const newBase64EncodedPicture = file.substring(file.indexOf(",") + 1);
+        // setProfilePicBase64(newBase64EncodedPicture);
+        // console.log("New Base - " + newBase64EncodedPicture);
 
-    setTimeout(() => {
-      axios({
-        method: "post",
-        url: apiUrl,
-        data: formData,
+        // console.log("Type - " + val.file.type);
+
+        //Gather form data based on the success of image conversion to Base64
+        const formData = {
+          email: val.email,
+          password: val.password,
+          displayName: val.displayName,
+          phoneNumber: val.phoneNumber,
+          role: val.role,
+          status: "pending",
+          sname: val.sname,
+          oname: val.oname,
+          profilePic: newBase64EncodedPicture,
+          extension: val.file.type,
+        };
+        // console.log("All Dataa - " + JSON.stringify(formData));
+        const apiUrl =
+          "https://us-central1-mlms-ec62a.cloudfunctions.net/userReg";
+
+        setTimeout(() => {
+          axios({
+            method: "post",
+            url: apiUrl,
+            data: formData,
+          })
+            .then((res) => {
+              setSuccess(res.data.message);
+              onSubmitProps.resetForm();
+              // console.log("Resss - " + res.status);
+              // console.log('Resss - ' + res.data.statusText);
+            })
+            .catch((e) => {
+              setError("Error Registering, Please try again!");
+              // console.log(e);
+            });
+          setLoading(false);
+          setLoading2("");
+        }, 5000);
       })
-        .then((res) => {
-          setSuccess(res.data.message);
-          // console.log("Resss - " + res.status);
-          // console.log('Resss - ' + res.data.statusText);
-        })
-        .catch((e) => {
-          setError("Error Registering, Please try again!");
-          // console.log(e);
-        });
-      setLoading(false);
-      setLoading2("");
-    }, 3000);
+      //Catch Block for Image to Base 64 conversion
+      .catch((e) => {
+        console.log(e);
+      });
 
-    onSubmitProps.resetForm();
     onSubmitProps.setSubmitting(false);
   };
 
@@ -159,7 +218,7 @@ function Register({handleChange}) {
             validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
-            {(formik) => {
+            {({values, setFieldValue}) => {
               return (
                 <Form>
                   <Grid container spacing={1}>
@@ -175,6 +234,7 @@ function Register({handleChange}) {
                         margin="normal"
                         color="secondary"
                         size="small"
+                        required
                         helperText={
                           <ErrorMessage name="email" component={FormErrors} />
                         }
@@ -193,6 +253,7 @@ function Register({handleChange}) {
                         margin="normal"
                         color="secondary"
                         size="small"
+                        required
                         helperText={
                           <ErrorMessage
                             name="displayName"
@@ -215,6 +276,7 @@ function Register({handleChange}) {
                         margin="normal"
                         color="secondary"
                         size="small"
+                        required
                         helperText={
                           <ErrorMessage name="sname" component={FormErrors} />
                         }
@@ -232,6 +294,7 @@ function Register({handleChange}) {
                         margin="normal"
                         color="secondary"
                         size="small"
+                        required
                         helperText={
                           <ErrorMessage name="oname" component={FormErrors} />
                         }
@@ -251,6 +314,7 @@ function Register({handleChange}) {
                         margin="normal"
                         color="secondary"
                         size="small"
+                        required
                         helperText={
                           <ErrorMessage
                             name="phoneNumber"
@@ -264,6 +328,7 @@ function Register({handleChange}) {
                       <FormControl
                         component="fieldset"
                         margin="dense"
+                        required
                         fullWidth
                       >
                         <FormLabel component="legend">Register as</FormLabel>
@@ -304,6 +369,7 @@ function Register({handleChange}) {
                         margin="normal"
                         color="secondary"
                         size="small"
+                        required
                         helperText={
                           <ErrorMessage
                             name="password"
@@ -324,6 +390,7 @@ function Register({handleChange}) {
                         margin="normal"
                         color="secondary"
                         size="small"
+                        required
                         helperText={
                           <ErrorMessage
                             name="conf_password"
@@ -332,6 +399,40 @@ function Register({handleChange}) {
                         }
                       />
                     </Grid>
+                  </Grid>
+
+                  <Grid container>
+                    <Grid item sm={6} xs={12}>
+                      <Input
+                        hidden
+                        ref={fileRef}
+                        type="file"
+                        name="file"
+                        accept="image/*"
+                        id="contained-button-file"
+                        multiple
+                        onChange={(event) => {
+                          setFieldValue("file", event.target.files[0]);
+                        }}
+                      />
+                      Profile Picture Preview
+                      {values.file && <PreviewImage file={values.file} />}
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={() => {
+                          fileRef.current.click();
+                        }}
+                      >
+                        Upload Profile Picture
+                      </Button>
+                    </Grid>
+
+                    <FormHelperText>
+                      <ErrorMessage name="file" component={FormErrors} />
+                    </FormHelperText>
                   </Grid>
 
                   <Box mt={2} mb={2}>
@@ -345,7 +446,7 @@ function Register({handleChange}) {
                       size="small"
                       fullWidth
                       className={classes.loginBtn}
-                      disabled={formik.isSubmitting}
+                      disabled={values.isSubmitting}
                     >
                       {/* {formik.isSubmitting ? setLoading(true) : "Login"} */}
                       Register
