@@ -49,6 +49,7 @@ function Login({handleChange}) {
       login(val.username, val.password)
         .then((res) => {
           history.push("/dashboard");
+          onSubmitProps.resetForm();
         })
         .catch((err) => {
           setError(err.message);
@@ -58,7 +59,6 @@ function Login({handleChange}) {
       setLoading2("");
     }, 2000);
 
-    onSubmitProps.resetForm();
     onSubmitProps.setSubmitting(false);
   };
 
@@ -70,7 +70,7 @@ function Login({handleChange}) {
             <Avatar sx={{bgcolor: "#039bef"}}>
               <LockOpenOutlinedIcon />
             </Avatar>
-            <Typography variant="h6">SW MLMS</Typography>
+            <Typography variant="h6">PWA MLMS</Typography>
             <Typography variant="subtitle1">Please Login!</Typography>
           </Grid>
           {error && (
