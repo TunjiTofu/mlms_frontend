@@ -6,6 +6,7 @@ import {AuthProvider} from "./context/AuthContext";
 import Dashboard from "./components/pages/Dashboard";
 import PrivateRoute from "./components/PrivatRoute";
 import LayoutPage from "./components/Layout/LayoutPage";
+import Logout from "./components/auth/Logout";
 
 // Primary - #039be5
 const theme = createTheme({
@@ -42,8 +43,9 @@ function App() {
         <AuthProvider>
           <Switch>
             <Route exact path="/" component={LoginRegisterContainer} />
-            <LayoutPage>
-              <PrivateRoute path="/dashboard" component={Dashboard} />
+            <Route exact path="/logout" component={Logout} />
+            <LayoutPage> 
+              <PrivateRoute exact path="/dashboard" component={Dashboard} />
             </LayoutPage>
           </Switch>
         </AuthProvider>
