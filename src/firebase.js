@@ -26,11 +26,12 @@ export const dataB = firebase.firestore();
 // });
 
 
-// export const db = {
-//   users: dataB.collection("users"),
-//   desires: dataB.collection("desires"),
-//   getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp,
-// };
+export const db = {
+  classes: dataB.collection("classes"),
+  classesRefDoc: dataB,
+  classesMembers: dataB.collection("classesMembers"),
+  getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp,
+};
 
 export const myFirebaseAuth = firebase.auth();
 export const myFirebaseAuthReAuth = firebase.auth;
