@@ -7,6 +7,7 @@ import Dashboard from "./components/pages/Dashboard";
 import PrivateRoute from "./components/PrivatRoute";
 import LayoutPage from "./components/Layout/LayoutPage";
 import Logout from "./components/auth/Logout";
+import ClassModules from "./components/pages/ClassModules";
 
 // Primary - #039be5
 const theme = createTheme({
@@ -46,6 +47,7 @@ function App() {
             <Route exact path="/logout" component={Logout} />
             <LayoutPage> 
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/class/:classId" component={ClassModules} />
             </LayoutPage>
           </Switch>
         </AuthProvider>

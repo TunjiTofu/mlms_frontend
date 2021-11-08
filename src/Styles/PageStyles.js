@@ -16,6 +16,24 @@ export const useStylesPages = makeStyles({
     boxShadow: 24,
     p: 4,
   },
+
+  cardMaxHeight: {
+    height:'200px',
+  },
+
+  cardContentWidth:{
+    display: "-webkit-box",
+    boxOrient: "vertical",
+    lineClamp: 4,
+    wordBreak: "break-all",
+    overflow: "hidden",
+    height:'80px'
+  },
+
+  listItem:{
+    // border: "2px solid red",
+    // borderRadius: "5px",
+  },
   
 
   //   login:{

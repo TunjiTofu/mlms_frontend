@@ -25,10 +25,16 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@emotion/react";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import FormErrors from "../FormErrors";
-import {AddCircleOutlined, CancelOutlined} from "@mui/icons-material";
+import {
+  AddCircleOutlined,
+  CancelOutlined,
+  ExitToAppOutlined,
+} from "@mui/icons-material";
 import * as Yup from "yup";
 import axios from "axios";
 import {db} from "../../firebase";
+import {Box} from "@mui/system";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const {currentUser, idToken} = useAuth();
@@ -42,10 +48,7 @@ function Dashboard() {
   const [loadingClasses, setLoadingClasses] = useState(false);
   const [errorClasses, setErrorClasses] = useState("");
   const [clssInfo, setClssInfo] = useState("");
-  const [classDetails, setClassDetails] = useState([{}]);
-  const [className, setClassName] = useState([]);
-  const classDetailRef = useRef([])
-  const [classLength, setClassLength] = useState(0)
+  const classDetailRef = useRef([]);
   const [forceUpdate, setForceUpdate] = useState(Date.now());
   const items = [];
 
@@ -58,88 +61,19 @@ function Dashboard() {
   };
 
   const getClasses = () => {
-    console.log("Current User - " + currentUser.uid);
+    // console.log("Current User - " + currentUser.uid);
     setLoadingClasses(true);
-    setClssInfo("")
+    setClssInfo("");
     setTimeout(() => {
       setErrorClasses("");
-      // console.log(currentUser.uid);
-      // db.classesMembers
-      //   .where("userId", "==", currentUser)
-      //   .get()
-      //   .then((snapshot2) => {
-      //     console.log('ttttttttttt');
-      //     console.log(snapshot2);
-      //   })
-      //   .catch((err) => {
-      //     console.log("Error", err);
-      //     setError("Error getting user details", err.message);
-      //   });
-
-      // const items = [];
-      // return db.classesMembers.where("userId", "==", currentUser.uid).get().then((snapshot)=>{
-      //   snapshot.forEach((doc)=>{
-      //     const docId = doc.data().classId;
-      //     db.classes.doc(docId).get().then((document)=>{
-      //         items.push({docId, ...document.data()});
-      //         setClassDetails([...classDetails, document.data()]);
-      //     })
-      //   })
-      //   console.log("itemssssssssssssssss");
-      //   console.log(items);
-      //   console.log("class details");
-      //   console.log(classDetails);
-      //   return Promise.all(items)
-      // })
-
-      // db.classesMembers
-      //   .where("userId", "==", currentUser.uid)
-      //   .get()
-      //   .then((snapshot) => {
-      //     console.log(snapshot);
-
-      //     if (!snapshot.empty) {
-      //       const items = [];
-      //       snapshot.forEach((doc) => {
-      //         console.log(doc.data().classId);
-
-      //         const docId = doc.data().classId;
-      //         db.classes
-      //           .doc(docId)
-      //           .get()
-      //           .then((document) => {
-      //             items.push({docId, ...document.data()});
-      //           });
-
-      //         // db.classes.doc(doc.data().classId).onSnapshot(
-      //         //   {includeMetadataChanges: false},
-      //         //   (document) => {
-      //         //     items.push({id, ...document.data()});
-
-      //         //   }
-      //         // );
-      //       });
-      //       setClassDetails([items]);
-
-      //       console.log("itemssssssssssssssss");
-      //       console.log(items);
-      //       console.log("class details");
-      //       console.log(classDetails);
-      //     } else {
-      //       setClssInfo("You have not joined any class!");
-      //     }
-      //   });
 
       db.classesMembers
         .where("userId", "==", currentUser.uid)
         .get()
         .then((snapshot) => {
-          console.log(snapshot);
-
           if (!snapshot.empty) {
-            // const items = [];
             snapshot.forEach((doc) => {
-              console.log(doc.data().classId);
+              // console.log(doc.data().classId);
 
               const docId = doc.data().classId;
               db.classes
@@ -147,38 +81,23 @@ function Dashboard() {
                 .get()
                 .then((document) => {
                   items.push({docId, ...document.data()});
-                  setClassDetails([...items]);
-                 
                 });
 
-              // db.classes.doc(doc.data().classId).onSnapshot(
-              //   {includeMetadataChanges: false},
-              //   (document) => {
-              //     items.push({id, ...document.data()});
-
-              //   }
-              // );
+              // db.classes
+              //   .doc(docId)
+              //   .onSnapshot({includeMetadataChanges: false}, (document) => {
+              //     items.push({docId, ...document.data()});
+              //     setClassDetails([...items]);
+              //   });
             });
-            // setClassDetails([items]);
-            classDetailRef.current = items
-            
-
-
-            console.log("itemssssssssssssssss");
-            console.log(items);
-            console.log("class details");
-            console.log(classDetails);
-            console.log("class details Ref");
-            console.log(classDetailRef);
-            console.log("class Length");
-            console.log(classLength);
-            console.log("class Force Update");
-            console.log(forceUpdate);
+            setForceUpdate();
+            classDetailRef.current = items;
+            // console.log(classDetailRef.current);
           } else {
             setClssInfo("You have not joined any class!");
           }
         });
-        setLoadingClasses(false)
+      setLoadingClasses(false);
     }, 5000);
   };
 
@@ -262,7 +181,7 @@ function Dashboard() {
                     if (change.type === "modified") {
                       setError("");
                       setSuccess("You have successfully joined the class");
-                      setForceUpdate() //force to trigger Usestate
+                      setForceUpdate(); //force to trigger Usestate
                       window.location.reload(true); //Force a page reload
                     }
                   });
@@ -300,8 +219,8 @@ function Dashboard() {
 
           <Grid container spacing={1} className={classes.spacingTop4}>
             <Grid item xs={12} sm={12} md={8}>
-              <Typography variant="h5" color="primary">
-                Your Class
+              <Typography variant="subtitle1" color="primary">
+                <strong>Current Classes</strong>
               </Typography>
             </Grid>
 
@@ -402,57 +321,70 @@ function Dashboard() {
               </Formik>
             </Dialog>
           </Grid>
-          
+
           <Grid container spacing={2} className={classes.spacingTop4}>
             <Grid item xs={12}>
-            {errorClasses && (
-            <Alert severity="warning">
-              Error! <strong>{errorClasses}</strong>
-            </Alert>
-          )}
-          {loadingClasses && (
-            <Alert severity="info">
-              Loading!{" "}
-              <strong>Please wait while we load your classes</strong>
-            </Alert>
-          )}
-
-          {/* {successClasses && (
-            <Alert severity="success">
-              Success! <strong>Belw are your classes</strong>
-            </Alert>
-          )} */}
-          {clssInfo && (
-            <Alert severity="info">
-              Info! <strong>{clssInfo}</strong>
-            </Alert>
-          )}
-              </Grid>
+              {errorClasses && (
+                <Alert severity="warning">
+                  Error! <strong>{errorClasses}</strong>
+                </Alert>
+              )}
+              {loadingClasses && (
+                <Alert severity="info">
+                  Loading!{" "}
+                  <strong>Please wait while we load your classes</strong>
+                </Alert>
+              )}
+              {clssInfo && (
+                <Alert severity="info">
+                  Info! <strong>{clssInfo}</strong>
+                </Alert>
+              )}
+            </Grid>
             {classDetailRef.current.map((classItem) => (
               <Grid key={classItem.docId} item xs={12} sm={6} md={4}>
                 {/* Card to Show Classes Start */}
-                <Card>
-                  <CardActionArea>
-                    <CardMedia
+                <Card
+                  className={classes.cardMaxHeight}
+                  sx={{border: `2px solid ${classItem.color}`}}
+                >
+                  <CardActionArea component={Link} to={`/class/${classItem.docId}`}>
+                    {/* <CardMedia
                       component="img"
                       height="140"
                       image="/static/images/cards/contemplative-reptile.jpg"
                       alt="green iguana"
-                    />
+                    /> */}
                     <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="div"
+                        noWrap
+                      >
                         {classItem.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
-                      </Typography>
+                      <Box className={classes.cardContentWidth} component="div">
+                        <Typography variant="body2" align="justify">
+                          {classItem.description}
+                        </Typography>
+                      </Box>
                     </CardContent>
                   </CardActionArea>
                   <CardActions>
-                    <Button size="small" color="primary">
-                      Share
+                    <Button
+                      size="small"
+                      sx={{
+                        color: `${classItem.color}`,
+
+                        backgroundColor: "#f5f3f3",
+                      }}
+                      component={Link}
+                      to={`/class/${classItem.docId}`}
+                      variant="outlined"
+                      startIcon={<ExitToAppOutlined />}
+                    >
+                      Go to Class
                     </Button>
                   </CardActions>
                 </Card>
@@ -463,7 +395,29 @@ function Dashboard() {
           </Grid>
         </Grid>
         <Grid item xs={12} sm={12} md={3}>
-          B
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" color="primary">
+              Upcoming Activities
+            </Typography>
+            <Divider />
+            <Typography variant="subtitle1">
+              One <br />
+              Two <br />
+              Three
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} className={classes.spacingTop4}>
+            <Typography variant="subtitle1" color="primary">
+              News
+            </Typography>
+            <Divider />
+            <Typography variant="subtitle1">
+              One <br />
+              Two <br />
+              Three
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
     </div>
