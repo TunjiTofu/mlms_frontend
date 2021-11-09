@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { myFirebaseAuth } from "../firebase"
+import React, {useContext, useEffect, useState} from "react";
+import {myFirebaseAuth} from "../firebase";
 
 const AuthContext = React.createContext();
 
@@ -7,8 +7,9 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children }) {
+export function AuthProvider({children}) {
   const [currentUser, setCurrentUser] = useState();
+  const [idToken, setIdToken] = useState('');
   const [loading, setLoading] = useState(true);
 
   function signUp(email, password) {
@@ -30,7 +31,7 @@ export function AuthProvider({ children }) {
   }
 
   function updateUserEmail(newEmail) {
-    return  myFirebaseAuth.currentUser.updateEmail(newEmail)
+    return myFirebaseAuth.currentUser.updateEmail(newEmail);
     // return myFirebaseAuth.currentUser.updateProfile({
     //   email: newEmail,
     // });
@@ -41,7 +42,31 @@ export function AuthProvider({ children }) {
   }
 
   function getUserIdToken() {
-    return myFirebaseAuth.currentUser.getIdToken();
+    myFirebaseAuth.currentUser
+      .getIdToken()
+      .then(function (idToken) {
+        return idToken;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function getUserIdTokenResult() {
+    myFirebaseAuth.currentUser
+      .getIdTokenResult()
+      .then((idTokenResult) => {
+        return idTokenResult.claims.role;
+        // if (idTokenResult.claims.role === "TEA") {
+        //   console.log("Msgg - " + idTokenResult.claims.role);
+        //   return true;
+        // } else {
+        //   return false;
+        // }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function logout() {
@@ -55,6 +80,12 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscriber = myFirebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        user.getIdToken().then((idToken) => {
+          setIdToken(idToken);
+          return idToken;
+        });
+      }
       setCurrentUser(user);
       setLoading(false);
     });
@@ -63,6 +94,7 @@ export function AuthProvider({ children }) {
 
   const val = {
     currentUser,
+    idToken,
     login,
     signUp,
     updatePassword,
@@ -71,6 +103,7 @@ export function AuthProvider({ children }) {
     updateUserEmail,
     getUid,
     getUserIdToken,
+    getUserIdTokenResult,
   };
 
   return (
