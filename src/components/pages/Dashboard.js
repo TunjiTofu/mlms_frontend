@@ -98,7 +98,7 @@ function Dashboard() {
           }
         });
       setLoadingClasses(false);
-    }, 5000);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -348,7 +348,7 @@ function Dashboard() {
                   className={classes.cardMaxHeight}
                   sx={{border: `2px solid ${classItem.color}`}}
                 >
-                  <CardActionArea component={Link} to={`/class/${classItem.docId}`}>
+                  <CardActionArea component={Link} to={`/modules/${classItem.docId}`}>
                     {/* <CardMedia
                       component="img"
                       height="140"
@@ -380,7 +380,7 @@ function Dashboard() {
                         backgroundColor: "#f5f3f3",
                       }}
                       component={Link}
-                      to={`/class/${classItem.docId}`}
+                      to={`/moodules/${classItem.docId}`}
                       variant="outlined"
                       startIcon={<ExitToAppOutlined />}
                     >

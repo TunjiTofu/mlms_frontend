@@ -30,6 +30,7 @@ export const db = {
   classes: dataB.collection("classes"),
   classesMembers: dataB.collection("classesMembers"),
   classModules: dataB.collection("modules"),
+  classPosts: dataB.collection("posts"),
   getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp,
 };
 
