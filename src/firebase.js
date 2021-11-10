@@ -31,7 +31,8 @@ export const db = {
   classesMembers: dataB.collection("classesMembers"),
   classModules: dataB.collection("modules"),
   classPosts: dataB.collection("posts"),
-  getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp,
+  postComments: dataB.collection("comments"),
+  getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
 };
 
 export const myFirebaseAuth = firebase.auth();

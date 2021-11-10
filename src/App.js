@@ -49,7 +49,7 @@ function App() {
             <LayoutPage> 
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/modules/:classId" component={ClassModules} />
-              <PrivateRoute exact path="/posts/:moduleId" component={ClassPosts} />
+              <PrivateRoute exact path="/posts/:classId/:moduleId" component={ClassPosts} />
             </LayoutPage>
           </Switch>
         </AuthProvider>
