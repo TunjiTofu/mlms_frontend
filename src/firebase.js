@@ -15,15 +15,15 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig)
 export const dataB = firebase.firestore();
 
-// dataB.enablePersistence().catch((err) => {
-//   if (err.code === "failed-precondition") {
-//     //Probably multiple tabs open
-//     console.log("Persistence Failed");
-//   } else if (err.code === "unimplemented") {
-//     //Lack of Browser Support
-//     console.log("Persistence not available");
-//   }
-// });
+dataB.enablePersistence().catch((err) => {
+  if (err.code === "failed-precondition") {
+    //Probably multiple tabs open
+    console.log("Persistence Failed");
+  } else if (err.code === "unimplemented") {
+    //Lack of Browser Support
+    console.log("Persistence not available");
+  }
+});
 
 
 export const db = {

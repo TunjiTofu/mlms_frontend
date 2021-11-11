@@ -98,7 +98,7 @@ function Dashboard() {
           }
         });
       setLoadingClasses(false);
-    }, 3000);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -161,7 +161,7 @@ function Dashboard() {
                 classId: classIdentity,
                 // classRef: db.classesRefDoc.doc('classes/' + classIdentity),
                 userId: formData.userId,
-                joinedAt: db.getCurrentTimeStamp(),
+                joinedAt: db.getCurrentTimeStamp,
               };
               const uniqueId = classIdentity + "-" + data.userId;
               //Set Data to firestore table
@@ -380,7 +380,7 @@ function Dashboard() {
                         backgroundColor: "#f5f3f3",
                       }}
                       component={Link}
-                      to={`/moodules/${classItem.docId}`}
+                      to={`/modules/${classItem.docId}`}
                       variant="outlined"
                       startIcon={<ExitToAppOutlined />}
                     >

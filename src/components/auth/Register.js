@@ -121,6 +121,7 @@ function Register({handleChange}) {
     // console.log(val);
     setLoading(true);
     setLoading2(true);
+    setError("")
 
     //Conver image to Base64 by calling function
     convertToBase64(val.file)
@@ -163,7 +164,7 @@ function Register({handleChange}) {
             })
             .catch((e) => {
               setError("Error Registering, Please try again!");
-              // console.log(e);
+              console.log(e);
             });
           setLoading(false);
           setLoading2("");
