@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Stack,
   Typography,
 } from "@mui/material";
 import React, {useEffect, useRef, useState} from "react";
@@ -12,6 +13,8 @@ import {Link, useParams} from "react-router-dom";
 import {db} from "../../firebase";
 import {useStylesPages} from "../../Styles/PageStyles";
 import {format} from "date-fns";
+import Paper from "@mui/material/Paper";
+import {styled} from "@mui/material/styles";
 
 function ClassModules() {
   const {classId} = useParams();
@@ -76,7 +79,7 @@ function ClassModules() {
             // setUsers(classModules)
             // console.log("Users");
             // console.log(users);
-              setForceUpdate();
+            setForceUpdate();
             // console.log("Use Ref - ");
             // console.log(modulesDet.current);
           });
@@ -93,41 +96,65 @@ function ClassModules() {
     getModules();
   }, [forceUpdate]);
 
+  const Item = styled(Paper)(({theme}) => ({
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: "#f50057",
+    textDecoration: "none",
+  }));
+
   return (
     <div>
-      {classLoadingInfo ? (
-        <Alert severity="error">
-          Error! <strong>Invalid Class Selected!</strong>
-        </Alert>
-      ) : null}
-      {moduleError && (
-        <Alert severity="error">
-          Error! <strong>{moduleError}</strong>
-        </Alert>
-      )}
-      {moduleLoading ? (
-        <Alert severity="info">
-          Loading! <strong>Loading Modules for Selected Class!</strong>
-        </Alert>
-      ) : null}
-      {ModuleLoadingError ? (
-        <Alert severity="error">
-          Error! <strong>No Module Available for the Selected Class!</strong>
-        </Alert>
-      ) : null}
-      <Typography variant="subtitle1" color="primary" gutterBottom>
-        <strong>
-          {classLoading
-            ? `Select a Module from the Class - ${className}`
-            : null}
-        </strong>
-      </Typography>
-
       <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Stack direction="row" spacing={2}>
+            <Item component={Link} to={"#"}>
+              Class Modules
+            </Item>
+            <Item component={Link} to={"#"}>
+              Assignments
+            </Item>
+            <Item component={Link} to={"#"}>
+              Upcoming Events
+            </Item>
+          </Stack>
+        </Grid>
+        <Grid item xs={12}>
+          {classLoadingInfo ? (
+            <Alert severity="error">
+              Error! <strong>Invalid Class Selected!</strong>
+            </Alert>
+          ) : null}
+          {moduleError && (
+            <Alert severity="error">
+              Error! <strong>{moduleError}</strong>
+            </Alert>
+          )}
+          {moduleLoading ? (
+            <Alert severity="info">
+              Loading! <strong>Loading Modules for Selected Class!</strong>
+            </Alert>
+          ) : null}
+          {ModuleLoadingError ? (
+            <Alert severity="error">
+              Error!{" "}
+              <strong>No Module Available for the Selected Class!</strong>
+            </Alert>
+          ) : null}
+          <Typography variant="subtitle1" color="primary" gutterBottom>
+            <strong>
+              {classLoading
+                ? `Select a Module from the Class - ${className}`
+                : null}
+            </strong>
+          </Typography>
+        </Grid>
+
         <Grid
           item
           xs={12}
-        //   component={Link}
+          //   component={Link}
           //   to={`/posts`}
           sx={{textDecoration: "none", color: "inherit"}}
         >
@@ -150,7 +177,7 @@ function ClassModules() {
             item
             xs={12}
             component={Link}
-            to={`/posts/${moduleItem.moduleId}`}
+            to={`/posts/${classId}/${moduleItem.moduleId}`}
             sx={{textDecoration: "none", color: "inherit"}}
           >
             <Divider />

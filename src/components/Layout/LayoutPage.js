@@ -27,7 +27,7 @@ import {useAuth} from "../../context/AuthContext";
 import {LogoutOutlined} from "@mui/icons-material";
 import { myFirebaseAuth } from "../../firebase";
 
-const drawerWidth = 240; //drawer width
+const drawerWidth = 200; //drawer width
 
 const Search = styled("div")(({theme}) => ({
   position: "relative",
@@ -293,6 +293,7 @@ function LayoutPage({children}) {
         <Typography variant="h5" className={classes.title}>
           PWA MLMS
         </Typography>
+        <image src= {`${process.env.PUBLIC_URL}/icons/icon-96.png`}/>
       </div>
       {/* <Toolbar /> */}
       <Divider />
