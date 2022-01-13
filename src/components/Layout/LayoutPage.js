@@ -75,29 +75,29 @@ function LayoutPage({children}) {
   const classes = useStylesLayout();
   const history = useHistory();
   const location = useLocation();
-  const {currentUser, logout, idToken} = useAuth();
+  const {logout} = useAuth();
   const [adminMenu, setAdminMenu] = useState(false);
 
 
-  const getRole = () => {
-    myFirebaseAuth.currentUser
-      .getIdTokenResult()
-      .then((idTokenResult) => {
-        if (idTokenResult.claims.role === "TEA") {
-          // console.log("Msgg - " + idTokenResult.claims.role);
-          setAdminMenu(true)
-        } else {
-          setAdminMenu(false)
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const getRole = () => {
+  //   myFirebaseAuth.currentUser
+  //     .getIdTokenResult()
+  //     .then((idTokenResult) => { 
+  //       if (idTokenResult.claims.role === "TEA") {
+  //         // console.log("Msgg - " + idTokenResult.claims.role);
+  //         setAdminMenu(true)
+  //       } else {
+  //         setAdminMenu(false)
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
-  useEffect(() => {
-    getRole();
-  }, []);
+  // useEffect(() => {
+  //   getRole();
+  // }, []);
 
  
   //   const {pathname} = location

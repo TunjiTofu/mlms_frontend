@@ -7,19 +7,13 @@ import {
   CardHeader,
   Divider,
   Grid,
-  Paper,
-  Stack,
   Typography,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import React, {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import {db} from "../../firebase";
-import ReactHtmlParser, {
-  processNodes,
-  convertNodeToElement,
-  htmlparser2,
-} from "react-html-parser";
+import ReactHtmlParser from "react-html-parser";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {Box} from "@mui/system";
@@ -47,9 +41,7 @@ function ClassPosts() {
   const [moduleError, setModuleError] = useState("");
 
   const [commentLoadingInfo, setCommentLoadingInfo] = useState(false);
-  const [commentLoadingError, setCommentLoadingError] = useState("");
   const postCommentsParent = useRef([]);
-  const postCommentsChild = useRef([]);
 
   const getModule = () => {
     setModuleLoadingInfo(false);

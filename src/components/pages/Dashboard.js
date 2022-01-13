@@ -5,7 +5,6 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
-  CardMedia,
   Dialog,
   DialogActions,
   DialogContent,
@@ -31,7 +30,6 @@ import {
   ExitToAppOutlined,
 } from "@mui/icons-material";
 import * as Yup from "yup";
-import axios from "axios";
 import {db} from "../../firebase";
 import {Box} from "@mui/system";
 import { Link } from "react-router-dom";
@@ -169,7 +167,7 @@ function Dashboard() {
                 .doc(uniqueId)
                 .set(data)
                 .catch((e) => {
-                  setError("Unable to join class. Try again - " + e);
+                  setError("Unable to join class. Try again  - " + e);
                 });
 
               //check for changes in snapshot
