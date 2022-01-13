@@ -47,9 +47,11 @@ function Login({handleChange}) {
     setLoading(true);
     setLoading2(true);
     setTimeout(() => {
-      login(val.username, val.password)
-        .then((res) => {
-          history.push("/dashboard");
+      console.log(val.username);
+      console.log(val.password);
+      login(val.username, val.password) 
+        .then(() => {
+          history.push("/dashboardn");
           onSubmitProps.resetForm();
         })
         .catch((err) => {

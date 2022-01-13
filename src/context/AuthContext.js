@@ -1,5 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
-import {myFirebaseAuth} from "../firebase";
+import { useDispatch } from "react-redux";
+import {myFirebaseAuth, myFirebaseAuthReAuth} from "../firebase";
+import { setCurrentUserN } from "../redux/actions/userActions";
 
 const AuthContext = React.createContext();
 
@@ -9,8 +11,10 @@ export function useAuth() {
 
 export function AuthProvider({children}) {
   const [currentUser, setCurrentUser] = useState();
-  const [idToken, setIdToken] = useState('');
+  const [idToken, setIdToken] = useState("");
   const [loading, setLoading] = useState(true);
+const dispatch = useDispatch();
+
 
   function signUp(email, password) {
     return myFirebaseAuth.createUserWithEmailAndPassword(email, password);
@@ -18,6 +22,15 @@ export function AuthProvider({children}) {
 
   function login(email, password) {
     return myFirebaseAuth.signInWithEmailAndPassword(email, password);
+
+    // myFirebaseAuth
+    //   .setPersistence(myFirebaseAuthReAuth.Auth.Persistence.LOCAL)
+    //   .then(() => {
+    //     return myFirebaseAuth.signInWithEmailAndPassword(email, password);
+    //   })
+    //   .catch((err) => {
+    //     console.log("Signin Error", err);
+    //   });
   }
 
   function updatePassword(password) {
@@ -87,6 +100,7 @@ export function AuthProvider({children}) {
         });
       }
       setCurrentUser(user);
+      // dispatch(setCurrentUserN(user));
       setLoading(false);
     });
     return unsubscriber;

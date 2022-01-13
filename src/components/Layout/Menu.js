@@ -11,7 +11,7 @@ export const menuList = [
   {
     text: "Dashboard",
     icon: <DashboardOutlined color="primary" />,
-    path: "/dashboard",
+    path: "/dashboardn",
   },
   {
     text: "Create Notes",

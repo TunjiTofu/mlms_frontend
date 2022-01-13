@@ -9,6 +9,8 @@ import LayoutPage from "./components/Layout/LayoutPage";
 import Logout from "./components/auth/Logout";
 import ClassModules from "./components/pages/ClassModules";
 import ClassPosts from "./components/pages/ClassPosts";
+import DashboardN from "./components/pages/DashboardN";
+import ClassDetail from "./components/pages/ClassDetail";
 
 // Primary - #039be5
 const theme = createTheme({
@@ -48,8 +50,11 @@ function App() {
             <Route exact path="/logout" component={Logout} />
             <LayoutPage> 
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/dashboardn" component={DashboardN} />
+              <PrivateRoute exact path="/class/:classId" component={ClassDetail} />
               <PrivateRoute exact path="/modules/:classId" component={ClassModules} />
               <PrivateRoute exact path="/posts/:classId/:moduleId" component={ClassPosts} />
+              {/* <Route>404 Not Found!</Route> */}
             </LayoutPage>
           </Switch>
         </AuthProvider>

@@ -12,7 +12,7 @@ const firebaseConfig = {
   appId: "1:653205121532:web:c43c92a96ff08ce1302a79",
   measurementId: "G-4X6C2KK1PD"
 };
-firebase.initializeApp(firebaseConfig)
+export const config = firebase.initializeApp(firebaseConfig)
 export const dataB = firebase.firestore();
 
 dataB.enablePersistence().catch((err) => {
@@ -35,7 +35,7 @@ export const db = {
   getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
 };
 
-export const myFirebaseAuth = firebase.auth();
 export const myFirebaseAuthReAuth = firebase.auth;
+export const myFirebaseAuth = firebase.auth();
 
 export default firebase;

@@ -12,13 +12,11 @@ import React, {useEffect, useRef, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {db} from "../../firebase";
 import {useStylesPages} from "../../Styles/PageStyles";
-import {format} from "date-fns";
 import Paper from "@mui/material/Paper";
 import {styled} from "@mui/material/styles";
 
 function ClassModules() {
   const {classId} = useParams();
-  const [users, setUsers] = useState([]);
   const modulesDet = useRef([]);
   const classes = useStylesPages();
   const [className, setClassName] = useState("");

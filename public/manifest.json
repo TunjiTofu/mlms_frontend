@@ -1,11 +1,12 @@
 {
-  "name": "PWA MLMS",
-  "short_name": "MLMS",
+  "name": "PWA MLMS Demo",
+  "short_name": "PWA MLMS",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#026ca7", 
   "theme_color": "#039bef",
   "orientation": "portrait-primary",
+  "description": "This application privides education without hindrances",
   "icons": [
     {
       "src": "/icons/icon-72.png",
