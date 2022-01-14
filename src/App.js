@@ -11,6 +11,7 @@ import ClassModules from "./components/pages/ClassModules";
 import ClassPosts from "./components/pages/ClassPosts";
 import DashboardN from "./components/pages/DashboardN";
 import ClassDetail from "./components/pages/ClassDetail";
+import PostContent from "./components/pages/classposts/PostContent";
 
 // Primary - #039be5
 const theme = createTheme({
@@ -54,6 +55,7 @@ function App() {
               <PrivateRoute exact path="/class/:classId" component={ClassDetail} />
               <PrivateRoute exact path="/modules/:classId" component={ClassModules} />
               <PrivateRoute exact path="/posts/:classId/:moduleId" component={ClassPosts} />
+              <PrivateRoute exact path="/postcontent/:classId/:moduleId/:postId" component={PostContent} />
               {/* <Route>404 Not Found!</Route> */}
             </LayoutPage>
           </Switch>

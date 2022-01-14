@@ -14,6 +14,10 @@ import {db} from "../../firebase";
 import {useStylesPages} from "../../Styles/PageStyles";
 import Paper from "@mui/material/Paper";
 import {styled} from "@mui/material/styles";
+import ModuleMenuBar from "./classmodules/ModuleMenuBar";
+import ModuleTitle from "./classmodules/ModuleTitle";
+import { useDispatch } from "react-redux";
+import { getClassDetailsInitiate } from "../../redux/actions/classActions";
 
 function ClassModules() {
   const {classId} = useParams();
@@ -27,31 +31,36 @@ function ClassModules() {
   const [moduleError, setModuleError] = useState("");
   const [forceUpdate, setForceUpdate] = useState(Date.now());
 
-  const getClass = () => {
-    // setClassLoading(true);
-    setClassLoadingInfo(false);
-    try {
-      setTimeout(() => {
-        db.classes
-          .doc(classId)
-          .onSnapshot({includeMetadataChanges: true}, (qSnapshot) => {
-            if (qSnapshot.exists) {
-              setClassLoading(true);
-              setClassName(qSnapshot.data().name);
-              //   console.log(qSnapshot.data().name);
-            } else {
-              setClassLoadingInfo(true);
-              setClassLoading(false);
-              //   console.log("Invalid Class Id!");
-            }
-          });
-        setClassLoading(false);
-      }, 1000);
-    } catch (err) {
-      setModuleError("Error - " + err);
-      console.log("Error getting Class Name", err);
-    }
-  };
+//   console.log("Class ID", classId);
+
+
+
+
+  // const getClass = () => {
+  //   // setClassLoading(true);
+  //   setClassLoadingInfo(false);
+  //   try {
+  //     setTimeout(() => {
+  //       db.classes
+  //         .doc(classId)
+  //         .onSnapshot({includeMetadataChanges: true}, (qSnapshot) => {
+  //           if (qSnapshot.exists) {
+  //             setClassLoading(true);
+  //             setClassName(qSnapshot.data().name);
+  //             //   console.log(qSnapshot.data().name);
+  //           } else {
+  //             setClassLoadingInfo(true);
+  //             setClassLoading(false);
+  //             //   console.log("Invalid Class Id!");
+  //           }
+  //         });
+  //       setClassLoading(false);
+  //     }, 1000);
+  //   } catch (err) {
+  //     setModuleError("Error - " + err);
+  //     console.log("Error getting Class Name", err);
+  //   }
+  // };
 
   const getModules = () => {
     setModuleLoading(true);
@@ -90,7 +99,7 @@ function ClassModules() {
   };
 
   useEffect(() => {
-    getClass();
+    // getClass();
     getModules();
   }, [forceUpdate]);
 
@@ -104,101 +113,9 @@ function ClassModules() {
 
   return (
     <div>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Stack direction="row" spacing={2}>
-            <Item component={Link} to={"#"}>
-              Class Modules
-            </Item>
-            <Item component={Link} to={"#"}>
-              Assignments
-            </Item>
-            <Item component={Link} to={"#"}>
-              Upcoming Events
-            </Item>
-          </Stack>
-        </Grid>
-        <Grid item xs={12}>
-          {classLoadingInfo ? (
-            <Alert severity="error">
-              Error! <strong>Invalid Class Selected!</strong>
-            </Alert>
-          ) : null}
-          {moduleError && (
-            <Alert severity="error">
-              Error! <strong>{moduleError}</strong>
-            </Alert>
-          )}
-          {moduleLoading ? (
-            <Alert severity="info">
-              Loading! <strong>Loading Modules for Selected Class!</strong>
-            </Alert>
-          ) : null}
-          {ModuleLoadingError ? (
-            <Alert severity="error">
-              Error!{" "}
-              <strong>No Module Available for the Selected Class!</strong>
-            </Alert>
-          ) : null}
-          <Typography variant="subtitle1" color="primary" gutterBottom>
-            <strong>
-              {classLoading
-                ? `Select a Module from the Class - ${className}`
-                : null}
-            </strong>
-          </Typography>
-        </Grid>
+      <ModuleMenuBar />
 
-        <Grid
-          item
-          xs={12}
-          //   component={Link}
-          //   to={`/posts`}
-          sx={{textDecoration: "none", color: "inherit"}}
-        >
-          <Divider />
-          <List>
-            <ListItem>
-              {ModuleLoadingError ? null : (
-                <ListItemText
-                  primary={`View all Class Post for ${className}`}
-                  secondary="This will display all post in the order which they were posted"
-                />
-              )}
-            </ListItem>
-          </List>
-          <Divider />
-        </Grid>
-        {modulesDet.current.map((moduleItem) => (
-          <Grid
-            key={moduleItem.id}
-            item
-            xs={12}
-            component={Link}
-            to={`/posts/${classId}/${moduleItem.moduleId}`}
-            sx={{textDecoration: "none", color: "inherit"}}
-          >
-            <Divider />
-
-            <List className={classes.listItem}>
-              <ListItem>
-                {moduleItem.updatedAt ? (
-                  <ListItemText
-                    primary={moduleItem.moduleName}
-                    // secondary= {`Last Updated: ${format(new Date(moduleItem.updatedAt.toDate()), 'E,dd/MMM/yyyy - h:m a')}`}
-                  />
-                ) : (
-                  <ListItemText
-                    primary={moduleItem.moduleName}
-                    // secondary= {`Created On: ${format(new Date(moduleItem.createdAt.toDate()), 'E,dd/MMM/yyyy - h:m a')}`}
-                  />
-                )}
-              </ListItem>
-            </List>
-            <Divider />
-          </Grid>
-        ))}
-      </Grid>
+      <ModuleTitle/>
     </div>
   );
 }

@@ -28,7 +28,7 @@ function JoinClassForm() {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -71,11 +71,11 @@ function JoinClassForm() {
             Error! <strong>{error}</strong>
           </Alert>
         )}
-        {loading && (
+        {/* {loading && (
           <Alert severity="info">
             Loading! <strong>Please wait while we process your request</strong>
           </Alert>
-        )}
+        )} */}
 
         {success && (
           <Alert severity="success">
