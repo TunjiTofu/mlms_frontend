@@ -13,27 +13,41 @@ import {ExitToAppOutlined} from "@mui/icons-material";
 import {useStylesPages} from "../../../Styles/PageStyles";
 import {Box} from "@mui/system";
 import {Link} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {firestoreConnect} from "react-redux-firebase";
+import {useDispatch, useSelector} from "react-redux";
+import {useAuth} from "../../../context/AuthContext";
+import { getClassMembersListInitiate } from "../../../redux/actions/classMembersActions";
+import { resetSelectedClassInitiate } from "../../../redux/actions/classActions";
+// import {firestoreConnect} from "react-redux-firebase";
 
 function ClassPrev() {
   const classes = useStylesPages();
-  const [loadingClasses, setLoadingClasses] = useState(false);
+  // const [loadingClasses, setLoadingClasses] = useState(false);
   const [errorClasses, setErrorClasses] = useState("");
   const [clssInfo, setClssInfo] = useState("");
+  const {currentUser, idToken} = useAuth();
 
   // const joinedClasses = useSelector((state) => state.allClasses.classes);
+  const dispatch = useDispatch();
+
   const {classMemberDetails} = useSelector((state) => state.classMemberLists);
 
+  useEffect(() => {
+    if (classMemberDetails && classMemberDetails !== " ")
+      dispatch(getClassMembersListInitiate(currentUser.uid));
+    return() => {
+      dispatch(resetSelectedClassInitiate());
+    }
+  }, []);
+
   const joinedClassList = classMemberDetails.map((item, index) => {
-    const {docId, name, color, description} = item;
+    const {id, name, color, description} = item;
     return (
-      <Grid key={docId} item xs={12} sm={6} md={4}>
+      <Grid key={index} item xs={12} sm={6} md={4}>
         <Card
           className={classes.cardMaxHeight}
           sx={{border: `2px solid ${color}`}}
         >
-          <CardActionArea component={Link} to={`/modules/${docId}`}>
+          <CardActionArea component={Link} to={`/modules/${id}`}>
             {/* <CardMedia
                     component="img"
                     height="140"
@@ -60,7 +74,7 @@ function ClassPrev() {
                 backgroundColor: "#f5f3f3",
               }}
               component={Link}
-              to={`/modules/${docId}`}
+              to={`/modules/${id}`}
               variant="outlined"
               startIcon={<ExitToAppOutlined />}
             >
@@ -83,11 +97,11 @@ function ClassPrev() {
             Error! <strong>{errorClasses}</strong>
           </Alert>
         )}
-        {loadingClasses && (
+        {/* {loadingClasses && (
           <Alert severity="info">
             Loading! <strong>Please wait while we load your classes</strong>
           </Alert>
-        )}
+        )} */}
         {clssInfo && (
           <Alert severity="info">
             Info! <strong>{clssInfo}</strong>
