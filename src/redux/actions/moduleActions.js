@@ -41,7 +41,7 @@ export const getModuleDetailsInitiate = (id) => {
         } else {
           console.log("No Module Details Found!");
         }
-      });
+      }); 
   };
 };
 

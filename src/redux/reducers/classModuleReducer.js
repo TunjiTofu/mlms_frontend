@@ -20,7 +20,7 @@ const classModuleReducer = (state = initialState, {type, payload}) => {
     case ActionTypes.RESET_SELECTED_CLASS_MODULES:
       return {
         ...state,
-        selectedClassModuleDetails: {},
+        allModules: [],
       };
 
     default:

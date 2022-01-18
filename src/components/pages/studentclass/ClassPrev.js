@@ -32,7 +32,7 @@ function ClassPrev() {
   const {classMemberDetails} = useSelector((state) => state.classMemberLists);
 
   useEffect(() => {
-    if (classMemberDetails && classMemberDetails !== " ")
+    if (classMemberDetails.length === 0)
       dispatch(getClassMembersListInitiate(currentUser.uid));
     return() => {
       dispatch(resetSelectedClassInitiate());

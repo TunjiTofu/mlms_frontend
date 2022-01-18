@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   Alert,
   Button,
@@ -12,25 +12,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-    AddCircleOutlined,
-    CancelOutlined,
-  } from "@mui/icons-material";
+import {AddCircleOutlined, CancelOutlined} from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import {useStylesPages} from "../../../Styles/PageStyles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import FormErrors from "../../FormErrors";
 import {useTheme} from "@emotion/react";
+import * as Yup from "yup";
+import {useAuth} from "../../../context/AuthContext";
+import {addClassMemberInitiate} from "../../../redux/actions/classMembersActions";
+import {useDispatch} from "react-redux";
+import {db} from "../../../firebase";
 
 function JoinClassForm() {
   const classes = useStylesPages();
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const {currentUser, idToken} = useAuth();
+  const dispatch = useDispatch();
 
   const handleClose = () => {
     setOpen(false);
@@ -38,6 +42,37 @@ function JoinClassForm() {
 
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  //Initial Val
+  const initialVal = {
+    classCode: "",
+  };
+
+  //Validation Schema
+  const validationSchema = Yup.object().shape({
+    classCode: Yup.string().trim().required("This is a required field"),
+  });
+
+  //Onsubmit Function
+  const onSubmit = (val, onSubmitProps) => {
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    // console.log(val);
+
+    const formData = {
+      classCode: val.classCode,
+      userId: currentUser.uid,
+      joinedAt: db.getCurrentTimeStamp,
+    };
+    // console.log(formData);
+
+    dispatch(addClassMemberInitiate(formData));
+    handleClose()
+
+    // onSubmitProps.resetForm();
+    // onSubmitProps.setSubmitting(false);
   };
 
   return (
@@ -84,9 +119,9 @@ function JoinClassForm() {
         )}
 
         <Formik
-        // initialValues={initialVal}
-        // validationSchema={validationSchema}
-        // onSubmit={onSubmit}
+          initialValues={initialVal}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
         >
           {(formik) => {
             return (
