@@ -11,6 +11,11 @@ const getChildrenComment = (childrenComments) => ({
   payload: childrenComments,
 });
 
+const getNoRecord = (noRec) => ({
+  type: ActionTypes.GET_NO_RECORD,
+  payload: noRec,
+});
+
 export const getParentCommentsInitiate = (id) => {
   return function (dispatch) {
     db.postComments
@@ -22,27 +27,19 @@ export const getParentCommentsInitiate = (id) => {
         if (!querySnapshot.empty) {
           const ParentComments = [];
           querySnapshot.forEach((doc) => {
-            ParentComments.push({...doc.data(), id: doc.id});
+            let userId = doc.data().userId;
 
-            dispatch(getParentComment(ParentComments));
-            // let parentId = doc.id;
-            // db.postComments
-            //   .orderBy("createdAt", "desc")
-            //   .where("parentId", "==", parentId)
-            //   .where("isChildComment", "==", true)
-            //   .where("status", "==", "active")
-            //   .onSnapshot({includeMetadataChanges: true}, (qSnapshot) => {
-            //     if (!qSnapshot.empty) {
-            //       const childrenComments = [];
-            //       qSnapshot.forEach((qdoc) => {
-            //         childrenComments.push({...qdoc.data(), id: qdoc.id});
-            //       });
-            //       dispatch(getChildrenComment(childrenComments));
-            //     } 
-            //     // else {
-            //     //   console.log("No Children Comments!");
-            //     // }
-            //   });
+            db.users.doc(userId).onSnapshot((document) => {
+              const userName = document.data().displayName;
+              console.log("User Nameeeee", userName);
+
+              ParentComments.push({
+                ...doc.data(),
+                id: doc.id,
+                userName: userName,
+              });
+              dispatch(getParentComment(ParentComments));
+            });
           });
         } else {
           console.log("No Comments!");
@@ -62,11 +59,19 @@ export const getChildrenCommentsInitiate = (parentId) => {
         if (!querySnapshot.empty) {
           const childrenComments = [];
           querySnapshot.forEach((doc) => {
-            childrenComments.push({...doc.data(), id: doc.id});
+            let userId = doc.data().userId;
+            db.users.doc(userId).onSnapshot((document) => {
+              const userName = document.data().displayName;
+              childrenComments.push({
+                ...doc.data(),
+                id: doc.id,
+                userName: userName,
+              });
+              dispatch(getChildrenComment(childrenComments));
+            });
           });
-          dispatch(getChildrenComment(childrenComments));
         } else {
-          console.log("No Children Comments!");
+          dispatch(getNoRecord("No Comment!"));
         }
       });
   };

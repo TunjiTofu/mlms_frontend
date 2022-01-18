@@ -27,6 +27,7 @@ dataB.enablePersistence().catch((err) => {
 
 
 export const db = {
+  users: dataB.collection("users"),
   classes: dataB.collection("classes"),
   classesMembers: dataB.collection("classesMembers"),
   classModules: dataB.collection("modules"),

@@ -18,8 +18,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 import {AddCircleOutlined, CancelOutlined} from "@mui/icons-material";
-import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
+import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import {Box} from "@mui/system";
 import ReactHtmlParser from "react-html-parser";
 import {format} from "date-fns";
@@ -40,6 +40,7 @@ import * as Yup from "yup";
 import {useAuth} from "../../../context/AuthContext";
 import {db} from "../../../firebase";
 import {sendChildReplyInitiate} from "../../../redux/actions/postReplyAction";
+import {getSingleUserInitiate} from "../../../redux/actions/userActions";
 
 function ContentCommentStream() {
   const {currentUser, idToken} = useAuth();
@@ -75,12 +76,7 @@ function ContentCommentStream() {
   const {postId} = useParams();
   const {parentComments} = useSelector((state) => state.contentComments);
   const {childrenComments} = useSelector((state) => state.contentComments);
-  // const {id} = parentComments;
-
-  // const callChildComment= (parentId)=>{
-  //   console.log('Parent Iddddddddddddd', parentId);
-  //   // dispatch(getChildrenCommentsInitiate(parentId));
-  // };
+  const {classDetails} = useSelector((state) => state.selectedClassDetails);
 
   //Initial Val
   const initialVal = {
@@ -118,18 +114,9 @@ function ContentCommentStream() {
     setSuccess("Successful!");
     setLoading(false);
     handleClose();
-
-    // createdAt: db.getCurrentTimeStamp,
-    //     updatedAt: "",
-    //     status: "active",
-    //     isChildComment: false,
-    //     isParentComment: true,
-    //     postId: postId,
-    //     parentId: null,
   };
 
   useEffect(() => {
-    // console.log("New CCCCCCCCPoast IDDDDDDDDDDDDDDD", childDisplay);
     if (childrenComments && childrenComments !== "") {
       dispatch(getChildrenCommentsInitiate(childDisplay));
     }
@@ -139,15 +126,6 @@ function ContentCommentStream() {
   }, [childDisplay]);
 
   useEffect(() => {
-    // console.log("Class Name ", classDetails );
-    // console.log("Class ID ", classId );
-    // console.log("Parent ID ", id);
-    // dispatch(getChildrenCommentsInitiate(commentParentItem.id))
-    // console.log("Childreeeennnn Commmmmmmmmm", callChildComment());
-    // dispatch(getChildrenCommentsInitiate(parentId));
-    // dispatch(getChildrenCommentsInitiate('7T3T8wag2tSXAraYX9Kz'));
-    // callChildComment('7T3T8wag2tSXAraYX9Kz')
-    // callChildComment();
     if (parentComments && parentComments !== "") {
       dispatch(getParentCommentsInitiate(postId));
     }
@@ -179,9 +157,23 @@ function ContentCommentStream() {
               parentComments.map((commentParentItem, index) => (
                 <div key={index}>
                   <Stack direction="row" spacing={2} sx={{mt: "10px"}}>
-                    <Avatar sx={{width: 24, height: 24, ml: 1}}>H</Avatar>
+                    <Avatar
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        ml: 1,
+                        backgroundColor: `${classDetails.color}`,
+                      }}
+                    >
+                      {commentParentItem.userName.charAt(0)}
+                    </Avatar>
                     <Typography variant="subtitle2" sx={{fontSize: 13}}>
-                      <strong>{commentParentItem.userId}</strong>
+                      <strong>{commentParentItem.userName}</strong>
+                      <strong>
+                        {/* {dispatch(
+                          getSingleUserInitiate(commentParentItem.userId)
+                        )} */}
+                      </strong>
                       {commentParentItem.createdAt
                         ? ` |  ${format(
                             new Date(commentParentItem.createdAt.toDate()),
@@ -219,7 +211,7 @@ function ContentCommentStream() {
                       startIcon={<CommentOutlinedIcon />}
                       onClick={handleParentComm(commentParentItem.id)}
                     >
-                      View Comments
+                      Comments
                     </Button>
                     <Button
                       aria-label="settings"
@@ -228,7 +220,7 @@ function ContentCommentStream() {
                       startIcon={<SendOutlinedIcon />}
                       onClick={handleOpen(commentParentItem.id)}
                     >
-                      Post Reply
+                      Reply
                     </Button>
                   </Stack>
 
@@ -246,11 +238,18 @@ function ContentCommentStream() {
                       >
                         {commentParentItem.id === commentChildItem.parentId && (
                           <Stack direction="row" spacing={2} sx={{mt: "10px"}}>
-                            <Avatar sx={{width: 24, height: 24, ml: 1}}>
-                              H
+                            <Avatar
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                ml: 1,
+                                backgroundColor: `${classDetails.color}`,
+                              }}
+                            >
+                              {commentChildItem.userName.charAt(0)}
                             </Avatar>
                             <Typography variant="subtitle2" sx={{fontSize: 12}}>
-                              <strong>{commentChildItem.userId}</strong>
+                              <strong>{commentChildItem.userName}</strong>
                               {commentChildItem.createdAt
                                 ? ` |  ${format(
                                     new Date(
