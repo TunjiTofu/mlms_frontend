@@ -25,24 +25,24 @@ export const getParentCommentsInitiate = (id) => {
             ParentComments.push({...doc.data(), id: doc.id});
 
             dispatch(getParentComment(ParentComments));
-            let parentId = doc.id;
-            db.postComments
-              .orderBy("createdAt", "desc")
-              .where("parentId", "==", parentId)
-              .where("isChildComment", "==", true)
-              .where("status", "==", "active")
-              .onSnapshot({includeMetadataChanges: true}, (qSnapshot) => {
-                if (!qSnapshot.empty) {
-                  const childrenComments = [];
-                  qSnapshot.forEach((qdoc) => {
-                    childrenComments.push({...qdoc.data(), id: qdoc.id});
-                  });
-                  dispatch(getChildrenComment(childrenComments));
-                } 
-                // else {
-                //   console.log("No Children Comments!");
-                // }
-              });
+            // let parentId = doc.id;
+            // db.postComments
+            //   .orderBy("createdAt", "desc")
+            //   .where("parentId", "==", parentId)
+            //   .where("isChildComment", "==", true)
+            //   .where("status", "==", "active")
+            //   .onSnapshot({includeMetadataChanges: true}, (qSnapshot) => {
+            //     if (!qSnapshot.empty) {
+            //       const childrenComments = [];
+            //       qSnapshot.forEach((qdoc) => {
+            //         childrenComments.push({...qdoc.data(), id: qdoc.id});
+            //       });
+            //       dispatch(getChildrenComment(childrenComments));
+            //     } 
+            //     // else {
+            //     //   console.log("No Children Comments!");
+            //     // }
+            //   });
           });
         } else {
           console.log("No Comments!");
@@ -51,26 +51,26 @@ export const getParentCommentsInitiate = (id) => {
   };
 };
 
-// export const getChildrenCommentsInitiate = (parentId) => {
-//   return function (dispatch) {
-//     db.postComments
-//       .orderBy("createdAt", "desc")
-//       .where("parentId", "==", parentId)
-//       .where("isChildComment", "==", true)
-//       .where("status", "==", "active")
-//       .onSnapshot({includeMetadataChanges: true}, (querySnapshot) => {
-//         if (!querySnapshot.empty) {
-//           const childrenComments = [];
-//           querySnapshot.forEach((doc) => {
-//             childrenComments.push({...doc.data(), id: doc.id});
-//           });
-//           dispatch(getChildrenComment(childrenComments));
-//         } else {
-//           console.log("No Children Comments!");
-//         }
-//       });
-//   };
-// };
+export const getChildrenCommentsInitiate = (parentId) => {
+  return function (dispatch) {
+    db.postComments
+      .orderBy("createdAt", "desc")
+      .where("parentId", "==", parentId)
+      .where("isChildComment", "==", true)
+      .where("status", "==", "active")
+      .onSnapshot({includeMetadataChanges: true}, (querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const childrenComments = [];
+          querySnapshot.forEach((doc) => {
+            childrenComments.push({...doc.data(), id: doc.id});
+          });
+          dispatch(getChildrenComment(childrenComments));
+        } else {
+          console.log("No Children Comments!");
+        }
+      });
+  };
+};
 
 export const resetParentCommentsInitiate = () => ({
   type: ActionTypes.RESET_PARENT_COMMENTS,

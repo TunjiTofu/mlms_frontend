@@ -226,7 +226,7 @@ function PostContent() {
         postId: postId,
         parentId: null,
       };
-      console.log("Reply ttttttttttt", replyData);
+      // console.log("Reply ttttttttttt", replyData);
 
       dispatch(sendParentReplyInitiate(replyData));
       setReplyError(false);

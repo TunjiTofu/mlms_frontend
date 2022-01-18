@@ -6,6 +6,11 @@ const sendParentReply = () => ({
   //   payload: comments,
 });
 
+const sendChildReply = () => ({
+    type: ActionTypes.SEND_CHILD_REPLY,
+    //   payload: comments,
+  });
+
 export const sendParentReplyInitiate = (replyContent) => {
   return function (dispatch) {
     db.postComments
@@ -15,6 +20,14 @@ export const sendParentReplyInitiate = (replyContent) => {
   };
 };
 
+export const sendChildReplyInitiate = (replyContent) => {
+    return function (dispatch) {
+      db.postComments
+        .doc()
+        .set(replyContent)
+        dispatch(sendChildReply())
+    };
+  };
 // export const resetParentCommentsInitiate = () => ({
 //   type: ActionTypes.RESET_PARENT_COMMENTS,
 // });

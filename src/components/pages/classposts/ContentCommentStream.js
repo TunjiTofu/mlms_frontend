@@ -24,6 +24,7 @@ import {
   getChildrenCommentsInitiate,
   getParentCommentsInitiate,
   resetParentCommentsInitiate,
+  resetChildrenCommentsInitiate,
 } from "../../../redux/actions/PostCommentsActions";
 import {useDispatch, useSelector} from "react-redux";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,7 +34,9 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import FormErrors from "../../FormErrors";
 import SendIcon from "@mui/icons-material/Send";
 import * as Yup from "yup";
-import { useAuth } from "../../../context/AuthContext";
+import {useAuth} from "../../../context/AuthContext";
+import {db} from "../../../firebase";
+import {sendChildReplyInitiate} from "../../../redux/actions/postReplyAction";
 
 function ContentCommentStream() {
   const {currentUser, idToken} = useAuth();
@@ -45,13 +48,21 @@ function ContentCommentStream() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [parentComm, setParentComm] = useState("");
+  const [childDisplay, setChildDisplay] = useState("");
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleOpen = () => {
+  const handleOpen = (id) => () => {
     setOpen(true);
+    setParentComm(id);
+  };
+
+  const handleParentComm = (id) => () => {
+    setChildDisplay(id);
+    console.log("Poast IDDDDDDDDDDDDDDD", id);
   };
 
   const dispatch = useDispatch();
@@ -70,27 +81,39 @@ function ContentCommentStream() {
   //Initial Val
   const initialVal = {
     childComment: "",
+    parentId: parentComm,
   };
 
   //Validation Schema
   const validationSchema = Yup.object().shape({
     childComment: Yup.string().trim().required("This is a required field"),
+    // parentId: Yup.string().trim().required("This is a required field"),
   });
 
-   //Onsubmit Function
-   const onSubmit = (val, onSubmitProps) => {
+  //Onsubmit Function
+  const onSubmit = (val, onSubmitProps) => {
+    console.log(val);
     setLoading(true);
     setError("");
     setSuccess("");
 
-    const formData = {
+    const childReplyData = {
       childComment: val.childComment,
       userId: currentUser.uid,
-      //Get the POST ID
-      //Add others from below
+      createdAt: db.getCurrentTimeStamp,
+      updatedAt: "",
+      status: "active",
+      isChildComment: true,
+      isParentComment: false,
+      postId: postId,
+      parentId: val.parentId,
     };
-    console.log(formData);
-
+    console.log(childReplyData);
+    dispatch(sendChildReplyInitiate(childReplyData));
+    // dispatch(sendParentReplyInitiate(replyData));
+    setSuccess("Successful!");
+    setLoading(false);
+    handleClose();
 
     // createdAt: db.getCurrentTimeStamp,
     //     updatedAt: "",
@@ -99,7 +122,17 @@ function ContentCommentStream() {
     //     isParentComment: true,
     //     postId: postId,
     //     parentId: null,
-  }
+  };
+
+  useEffect(() => {
+    console.log("New CCCCCCCCPoast IDDDDDDDDDDDDDDD", childDisplay);
+    if (childrenComments && childrenComments !== "") {
+      dispatch(getChildrenCommentsInitiate(childDisplay));
+    }
+    return () => {
+      dispatch(resetChildrenCommentsInitiate());
+    };
+  }, [childDisplay]);
 
   useEffect(() => {
     // console.log("Class Name ", classDetails );
@@ -111,9 +144,11 @@ function ContentCommentStream() {
     // dispatch(getChildrenCommentsInitiate('7T3T8wag2tSXAraYX9Kz'));
     // callChildComment('7T3T8wag2tSXAraYX9Kz')
     // callChildComment();
-
-    if (parentComments && parentComments !== "")
+    if (parentComments && parentComments !== "") {
       dispatch(getParentCommentsInitiate(postId));
+    }
+    
+
     return () => {
       dispatch(resetParentCommentsInitiate());
     };
@@ -165,7 +200,20 @@ function ContentCommentStream() {
                           "dd.MMM.yyyy - h:m a"
                         )}`
                       : "Posted now"}
-                    <Button aria-label="settings" onClick={handleOpen}>
+                    <Button
+                      aria-label="settings"
+                      data-id=""
+                      size="small"
+                      onClick={handleParentComm(commentParentItem.id)}
+                    >
+                      View Comments
+                    </Button>
+                    <Button
+                      aria-label="settings"
+                      data-id=""
+                      size="small"
+                      onClick={handleOpen(commentParentItem.id)}
+                    >
                       Post Reply
                     </Button>
                   </Typography>
@@ -200,6 +248,7 @@ function ContentCommentStream() {
         onClose={handleClose}
         fullScreen={fullScreen}
         fullWidth
+        id={parentComm}
       >
         {error && (
           <Alert severity="warning">
@@ -219,9 +268,9 @@ function ContentCommentStream() {
         )}
 
         <Formik
-        initialValues={initialVal}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
+          initialValues={initialVal}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
         >
           {(formik) => {
             return (
@@ -229,6 +278,18 @@ function ContentCommentStream() {
                 <DialogTitle>Post a Reply to Selected Comment</DialogTitle>
                 <DialogContent>
                   {/* <DialogContentText>Enter the Class Code</DialogContentText> */}
+                  {/* <input type="text" name="parentId" id="" defaultValue={parentComm} /> */}
+                  <Field
+                    as={TextField}
+                    name="parentId"
+                    type="text"
+                    size="small"
+                    value={parentComm}
+                    required
+                    helperText={
+                      <ErrorMessage name="parentId" component={FormErrors} />
+                    }
+                  />
                   <Field
                     as={TextField}
                     autoFocus
