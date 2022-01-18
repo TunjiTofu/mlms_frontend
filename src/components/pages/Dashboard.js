@@ -118,7 +118,7 @@ function Dashboard() {
     setLoading(true);
     setError("");
     setSuccess("");
-    // console.log(val);
+    // console.log(val); 
 
     const formData = {
       classCode: val.classCode,

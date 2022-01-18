@@ -23,10 +23,6 @@ function PostTitle() {
   const {allPosts} = useSelector((state) => state.selectedModulePosts);
 
   useEffect(() => {
-    // console.log("Class Name ", classDetails );
-    // console.log("Class ID ", classId );
-    // console.log("Module ID ", moduleId);
-
     if (allPosts && allPosts !== "") dispatch(getModulePostsInitiate(moduleId));
     return () => {
       dispatch(resetSelectedModulePostInitiate());
@@ -71,10 +67,7 @@ function PostTitle() {
                 <Divider />
               </Grid>
             ))}
-          {/* <Divider /> */}
-          {/* <Typography variant="body1" color="primary" gutterBottom>
-                  {ReactHtmlParser(postItem.postContent)}
-                </Typography> */}
+        
         </CardContent>
       </Card>
     </Grid>

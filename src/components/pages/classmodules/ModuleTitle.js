@@ -29,7 +29,7 @@ function ModuleTitle() {
     dispatch(getClassModulesInitiate(classId));
     return()=>{
         dispatch(resetSelectedClassModuleInitiate())
-    }
+    } 
   }, [classId]);
 
 
