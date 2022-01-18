@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {
   Alert,
   Avatar,
+  Stack,
   Button,
   Card,
   CardContent,
@@ -17,6 +18,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 import {AddCircleOutlined, CancelOutlined} from "@mui/icons-material";
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import {Box} from "@mui/system";
 import ReactHtmlParser from "react-html-parser";
 import {format} from "date-fns";
@@ -58,11 +61,12 @@ function ContentCommentStream() {
   const handleOpen = (id) => () => {
     setOpen(true);
     setParentComm(id);
+    setSuccess("");
   };
 
   const handleParentComm = (id) => () => {
     setChildDisplay(id);
-    console.log("Poast IDDDDDDDDDDDDDDD", id);
+    // console.log("Poast IDDDDDDDDDDDDDDD", id);
   };
 
   const dispatch = useDispatch();
@@ -125,7 +129,7 @@ function ContentCommentStream() {
   };
 
   useEffect(() => {
-    console.log("New CCCCCCCCPoast IDDDDDDDDDDDDDDD", childDisplay);
+    // console.log("New CCCCCCCCPoast IDDDDDDDDDDDDDDD", childDisplay);
     if (childrenComments && childrenComments !== "") {
       dispatch(getChildrenCommentsInitiate(childDisplay));
     }
@@ -147,7 +151,6 @@ function ContentCommentStream() {
     if (parentComments && parentComments !== "") {
       dispatch(getParentCommentsInitiate(postId));
     }
-    
 
     return () => {
       dispatch(resetParentCommentsInitiate());
@@ -175,35 +178,45 @@ function ContentCommentStream() {
             {parentComments &&
               parentComments.map((commentParentItem, index) => (
                 <div key={index}>
-                  <CardHeader
-                    avatar={<Avatar sx={{width: 24, height: 24}}>C</Avatar>}
-                    title={`Adetunji oooo`}
-                    // subheader={ReactHtmlParser(commentParentItem.comment)}
-                    // action={<Button aria-label="settings">Post Reply</Button>}
-                  />
-                  {/* <CardContent sx={{paddingLeft: 5, paddingRight: 5}}> */}
-                  <Typography
-                    gutterBottom
-                    // variant="body2"
-                    component="div"
+                  <Stack direction="row" spacing={2} sx={{mt: "10px"}}>
+                    <Avatar sx={{width: 24, height: 24, ml: 1}}>H</Avatar>
+                    <Typography variant="subtitle2" sx={{fontSize: 13}}>
+                      <strong>{commentParentItem.userId}</strong>
+                      {commentParentItem.createdAt
+                        ? ` |  ${format(
+                            new Date(commentParentItem.createdAt.toDate()),
+                            "dd.MMM.yyyy - h:m a"
+                          )}`
+                        : "Posted now"}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row">
+                    <Typography
+                      gutterBottom
+                      // variant="body2"
+                      component="div"
+                      sx={{
+                        marginLeft: 6,
+                        marginRight: 3,
+                        fontSize: 12,
+                        textAlign: "justify",
+                      }}
+                    >
+                      {ReactHtmlParser(commentParentItem.comment)}
+                    </Typography>
+                  </Stack>
+                  <Stack
+                    direction="row"
                     sx={{
                       paddingLeft: 5,
                       paddingRight: 5,
-                      fontSize: 12,
-                      textAlign: "justify",
                     }}
                   >
-                    {ReactHtmlParser(commentParentItem.comment)}
-                    {commentParentItem.createdAt
-                      ? `- ${format(
-                          new Date(commentParentItem.createdAt.toDate()),
-                          "dd.MMM.yyyy - h:m a"
-                        )}`
-                      : "Posted now"}
                     <Button
                       aria-label="settings"
                       data-id=""
                       size="small"
+                      startIcon={<CommentOutlinedIcon />}
                       onClick={handleParentComm(commentParentItem.id)}
                     >
                       View Comments
@@ -212,11 +225,13 @@ function ContentCommentStream() {
                       aria-label="settings"
                       data-id=""
                       size="small"
+                      startIcon={<SendOutlinedIcon />}
                       onClick={handleOpen(commentParentItem.id)}
                     >
                       Post Reply
                     </Button>
-                  </Typography>
+                  </Stack>
+
                   {childrenComments &&
                     childrenComments.map((commentChildItem, index) => (
                       <Typography
@@ -224,15 +239,46 @@ function ContentCommentStream() {
                         // variant="subtitle2"
                         component="div"
                         sx={{
-                          marginLeft: 10,
+                          marginLeft: 5,
                           fontSize: 11,
                           textAlign: "justify",
                         }}
                       >
-                        {commentParentItem.id === commentChildItem.parentId &&
-                          ReactHtmlParser(commentChildItem.comment)}
-                        {commentParentItem.id === commentChildItem.parentId &&
-                          `By- ${commentChildItem.userId}`}
+                        {commentParentItem.id === commentChildItem.parentId && (
+                          <Stack direction="row" spacing={2} sx={{mt: "10px"}}>
+                            <Avatar sx={{width: 24, height: 24, ml: 1}}>
+                              H
+                            </Avatar>
+                            <Typography variant="subtitle2" sx={{fontSize: 12}}>
+                              <strong>{commentChildItem.userId}</strong>
+                              {commentChildItem.createdAt
+                                ? ` |  ${format(
+                                    new Date(
+                                      commentChildItem.createdAt.toDate()
+                                    ),
+                                    "dd.MMM.yyyy - h:m a"
+                                  )}`
+                                : "Posted now"}
+                            </Typography>
+                          </Stack>
+                        )}
+                        {commentParentItem.id === commentChildItem.parentId && (
+                          <Stack direction="row">
+                            <Typography
+                              gutterBottom
+                              // variant="body2"
+                              component="div"
+                              sx={{
+                                marginLeft: 6,
+                                marginRight: 3,
+                                fontSize: 12,
+                                textAlign: "justify",
+                              }}
+                            >
+                              {commentChildItem.childComment}
+                            </Typography>
+                          </Stack>
+                        )}
                       </Typography>
                     ))}
                   {/* </CardContent> */}
@@ -280,9 +326,9 @@ function ContentCommentStream() {
                   {/* <DialogContentText>Enter the Class Code</DialogContentText> */}
                   {/* <input type="text" name="parentId" id="" defaultValue={parentComm} /> */}
                   <Field
-                    as={TextField}
+                    // as={TextField}
                     name="parentId"
-                    type="text"
+                    type="hidden"
                     size="small"
                     value={parentComm}
                     required
