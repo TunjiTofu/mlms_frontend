@@ -4,6 +4,7 @@ import classMemberListReducer from "./classMembersListReducer";
 import classModuleReducer from "./classModuleReducer";
 import classPostsReducer from "./classPostsReducers";
 import postCommentsReducer from "./postCommentsReducer";
+import userReducer from "./userReducer";
 // import {classReducer} from "./classReducer";
 // import { userReducer } from "./userReducer";
 // import {firestoreReducer} from 'redux-firestore';
@@ -17,6 +18,7 @@ const reducers = combineReducers({
   selectedClassModules: classModuleReducer,
   selectedModulePosts: classPostsReducer,
   contentComments: postCommentsReducer,
+  dbUser: userReducer,
 });
 
 export default reducers;
