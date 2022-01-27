@@ -35,14 +35,18 @@ export const useStylesPages = makeStyles({
   },
 
   quizDetailsLayout:{
-    marginTop: 6,
-    padding: 5,
+    // marginTop: 6,
+    padding: 10,
   },
 
-  listItem:{
-    // border: "2px solid red",
-    // borderRadius: "5px",
+  txtSecondary:{
+    color:"#f50057"
   },
+
+  width100:{
+    width: "100%",
+  },
+
   
 
   //   login:{
