@@ -12,6 +12,9 @@ import ClassPosts from "./components/pages/ClassPosts";
 import DashboardN from "./components/pages/DashboardN";
 import ClassDetail from "./components/pages/ClassDetail";
 import PostContent from "./components/pages/classposts/PostContent";
+import QuizList from "./components/pages/quizzes/QuizList";
+import QuizDetails from "./components/pages/quizzes/QuizDetails";
+import QuizMain from "./components/pages/quizzes/QuizMain";
 
 // Primary - #039be5
 const theme = createTheme({
@@ -56,6 +59,9 @@ function App() {
               <PrivateRoute exact path="/modules/:classId" component={ClassModules} />
               <PrivateRoute exact path="/posts/:classId/:moduleId" component={ClassPosts} />
               <PrivateRoute exact path="/postcontent/:classId/:moduleId/:postId" component={PostContent} />
+              <PrivateRoute exact path="/quizlist/:classId" component={QuizList} />
+              <PrivateRoute exact path="/quiz/:classId/:quizId" component={QuizDetails} />
+              <PrivateRoute exact path="/quizmain/:classId/:quizId" component={QuizMain} />
               {/* <Route>404 Not Found!</Route> */}
             </LayoutPage>
           </Switch>

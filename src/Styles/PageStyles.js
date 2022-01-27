@@ -30,6 +30,15 @@ export const useStylesPages = makeStyles({
     height:'80px'
   },
 
+  head: {
+    color: "red"
+  },
+
+  quizDetailsLayout:{
+    marginTop: 6,
+    padding: 5,
+  },
+
   listItem:{
     // border: "2px solid red",
     // borderRadius: "5px",
