@@ -80,7 +80,7 @@ const QuizMainBody = () => {
     dispatch(getQuizDetailsInitiate(quizId));
       dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq))
       
-  }, [quizId]);
+  }, []);
 
   return (
     <>
