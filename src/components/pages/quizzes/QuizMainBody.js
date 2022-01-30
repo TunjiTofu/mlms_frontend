@@ -16,9 +16,10 @@ import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import {useStylesPages} from "../../../Styles/PageStyles";
 import {useDispatch, useSelector} from "react-redux";
-import {getRandomSCQInitiate, resetSCQQuestionsInitiate} from "../../../redux/actions/scqActions";
+import {getRandomSCQInitiate, getScoreInitiate, resetSCQQuestionsInitiate} from "../../../redux/actions/scqActions";
 import {getQuizDetailsInitiate} from "../../../redux/actions/quizAction";
-import {decode} from "html-entities";
+import ReactHtmlParser from "react-html-parser";
+
 
 const QuizMainBody = () => {
   const {classId} = useParams();
@@ -76,24 +77,26 @@ const QuizMainBody = () => {
     (state) => state.selectedClassQuizzes
   );
 
-  const {studentSCQQuestions} = useSelector(
+  const {studentSCQQuestions, studentScore} = useSelector(
     (state) => state.selectedSCQQuestions
   );
 
   const [scqQuestionIndex, setScqQuestionIndex] = useState(0);
-  // console.log("SCQ Quest Index", scqQuestionIndex);
 
-  useEffect(() => {
+
+  useEffect(() => { 
     if (studentSCQQuestions && studentSCQQuestions) {
       dispatch(getQuizDetailsInitiate(quizId));
       console.log("Allll Student SCQ ", studentSCQQuestions);
-      dispatch(getRandomSCQInitiate(quizId, 3));
+      dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
       // dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
     }
     return () => {
       dispatch(resetSCQQuestionsInitiate());
     };
   }, []);
+
+  
 
   const handleClickNext=(e)=>{
     // console.log("Quest Index ", scqQuestionIndex);
@@ -113,7 +116,7 @@ const QuizMainBody = () => {
     }
   }
 
-  const handleClickAnswer = (e) =>{
+  const handleClickAnswer = val=> () =>{
     // console.log("Ans Click", e)
     // console.log(e.target.dataset.id);
 
@@ -124,11 +127,15 @@ const QuizMainBody = () => {
 
     // const ans = studentSCQQuestions[scqQuestionIndex].answer
     // console.log("Quest Ans", ans);
-    var selectedSCQAns = e.target.dataset.id
+    
+    var selectedSCQAns = val
     const SCQQuestAns = studentSCQQuestions[scqQuestionIndex].answer
 
-    console.log("Selected Ans ", selectedSCQAns);
+    console.log("Selected Ans ", val);
     console.log("Question Ans ", SCQQuestAns);
+    if (SCQQuestAns === selectedSCQAns) {
+      dispatch(getScoreInitiate(studentScore + 1))
+    }
   }
 
   return (
@@ -171,32 +178,32 @@ const QuizMainBody = () => {
                 
                     
                     <Typography variant="h6">
-                     { scqItem.question }
                      {/* { studentSCQQuestions[scqQuestionIndex].question} */}
+                     {ReactHtmlParser( scqItem.question)}
                     </Typography> 
               </Grid>
               <Divider />
               <Grid item xs={12} mt={2}>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}} data-id="A" onClick={handleClickAnswer} id="ansBtn">
-                   {scqItem.optionA}
+                  A. <Button variant="outlined" style={{textTransform: "none"}} data-id="A" onClick={handleClickAnswer('A')} id="ansBtn">
+                   {ReactHtmlParser(scqItem.optionA)}
                   </Button>
                 </p>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}} data-id="B" onClick={handleClickAnswer} id="ansBtn">
-                  {scqItem.optionB}
+                  B. <Button variant="outlined" style={{textTransform: "none"}} data-id="B" onClick={handleClickAnswer('B')} id="ansBtn">
+                  {ReactHtmlParser(scqItem.optionB)}
 
                   </Button>
                 </p>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}} data-id="C" onClick={handleClickAnswer} id="ansBtn">
-                  {scqItem.optionC}
+                  C. <Button variant="outlined" style={{textTransform: "none"}} data-id="C" onClick={handleClickAnswer('C')} id="ansBtn">
+                  {ReactHtmlParser(scqItem.optionC)}
 
                   </Button>
                 </p>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}} data-id="D" onClick={handleClickAnswer} id="ansBtn">
-                  {scqItem.optionD}
+                  D. <Button variant="outlined" style={{textTransform: "none"}} data-id="D" onClick={handleClickAnswer('D')} id="ansBtn">
+                  {ReactHtmlParser(scqItem.optionD)}
 
                   </Button>
                 </p>

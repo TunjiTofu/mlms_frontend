@@ -6,6 +6,9 @@ const getRandomScq = (scq) => ({
   payload: scq,
 });
 
+
+
+
 // const getQuizDetails = (quiz) => ({
 //   type: ActionTypes.GET_QUIZ_DETAILS,
 //   payload: quiz,
@@ -92,6 +95,13 @@ export const getRandomSCQInitiate = (id, maxQuest) => {
 export const resetSCQQuestionsInitiate = () => ({
   type: ActionTypes.RESET_RANDOM_SCQ_QUESTIONS,
 });
+
+export const getScoreInitiate = (score) => ({
+  type: ActionTypes.GET_SCORE,
+  payload: score,
+});
+
+
 
 // export const resetQuizDetailsInitiate = () => ({
 //     type: ActionTypes.RESET_QUIZ_DETAILS,

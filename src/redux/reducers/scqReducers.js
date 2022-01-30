@@ -2,6 +2,7 @@ import {ActionTypes} from "../constants/action-types";
 
 const initialState = {
   studentSCQQuestions: [],
+  studentScore: 0,
 };
 
 const scqReducer = (state = initialState, {type, payload}) => {
@@ -10,6 +11,12 @@ const scqReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         studentSCQQuestions: payload,
+      };
+
+    case ActionTypes.GET_SCORE:
+      return {
+        ...state,
+        studentScore: payload,
       };
     // case ActionTypes.GET_QUIZ_DETAILS:
     //   return {
@@ -25,7 +32,7 @@ const scqReducer = (state = initialState, {type, payload}) => {
     case ActionTypes.RESET_RANDOM_SCQ_QUESTIONS:
       return {
         ...state,
-        studentSCQQuestions: []
+        studentSCQQuestions: [],
       };
 
     default:
