@@ -15,9 +15,9 @@ import {useParams} from "react-router-dom";
 import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import {useStylesPages} from "../../../Styles/PageStyles";
-import { useDispatch, useSelector } from "react-redux";
-import { getRandomSCQInitiate } from "../../../redux/actions/scqActions";
-import { getQuizDetailsInitiate } from "../../../redux/actions/quizAction";
+import {useDispatch, useSelector} from "react-redux";
+import {getRandomSCQInitiate} from "../../../redux/actions/scqActions";
+import {getQuizDetailsInitiate} from "../../../redux/actions/quizAction";
 
 const QuizMainBody = () => {
   const {classId} = useParams();
@@ -75,11 +75,20 @@ const QuizMainBody = () => {
     (state) => state.selectedClassQuizzes
   );
 
+  const {studentSCQQuestions} = useSelector(
+    (state) => state.selectedSCQQuestions
+  );
 
   useEffect(() => {
-    dispatch(getQuizDetailsInitiate(quizId));
-      dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq))
-      
+    if (selectedClassQuizDetails && studentSCQQuestions){
+      dispatch(getQuizDetailsInitiate(quizId));
+    console.log("Allll Student SCQ ", studentSCQQuestions );
+      dispatch(getRandomSCQInitiate(quizId, 3));
+      // dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
+    }
+    // return () => {
+    //   dispatch(resetSelectedClassQuizInitiate());
+    // };
   }, []);
 
   return (
@@ -234,37 +243,37 @@ const QuizMainBody = () => {
           <Grid item xs={12}>
             <Paper elevation={3} className={classes.quizDetailsLayout}>
               <Grid item xs={12}>
-                  <Grid item xs={12} mb={2}>
-                    <Typography variant="h6">
-                      List and Explain three types of water
-                    </Typography>
-                  </Grid>
-                  <Divider />
-                  <Grid item xs={12} mt={2}>
-                    <TextField
-                      id="outlined-textarea"
-                      label="Your Answer here..."
-                      placeholder="Write your answer here..."
-                      multiline
-                      rows={3}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    mt={2}
-                    sx={{display: "flex", justifyContent: "space-around"}}
+                <Grid item xs={12} mb={2}>
+                  <Typography variant="h6">
+                    List and Explain three types of water
+                  </Typography>
+                </Grid>
+                <Divider />
+                <Grid item xs={12} mt={2}>
+                  <TextField
+                    id="outlined-textarea"
+                    label="Your Answer here..."
+                    placeholder="Write your answer here..."
+                    multiline
+                    rows={3}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  mt={2}
+                  sx={{display: "flex", justifyContent: "space-around"}}
+                >
+                  <Button
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    style={{textTransform: "none"}}
                   >
-                    <Button
-                      variant="contained"
-                      color="success"
-                      size="small"
-                      style={{textTransform: "none"}}
-                    >
-                      Save Current Theory Answer
-                    </Button>
-                  </Grid>
+                    Save Current Theory Answer
+                  </Button>
+                </Grid>
               </Grid>
               <Grid item xs={12} mt={1}>
                 <Paper
