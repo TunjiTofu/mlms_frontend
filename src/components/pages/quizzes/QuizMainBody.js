@@ -16,8 +16,9 @@ import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import {useStylesPages} from "../../../Styles/PageStyles";
 import {useDispatch, useSelector} from "react-redux";
-import {getRandomSCQInitiate} from "../../../redux/actions/scqActions";
+import {getRandomSCQInitiate, resetSCQQuestionsInitiate} from "../../../redux/actions/scqActions";
 import {getQuizDetailsInitiate} from "../../../redux/actions/quizAction";
+import {decode} from "html-entities";
 
 const QuizMainBody = () => {
   const {classId} = useParams();
@@ -79,17 +80,56 @@ const QuizMainBody = () => {
     (state) => state.selectedSCQQuestions
   );
 
+  const [scqQuestionIndex, setScqQuestionIndex] = useState(0);
+  // console.log("SCQ Quest Index", scqQuestionIndex);
+
   useEffect(() => {
-    if (selectedClassQuizDetails && studentSCQQuestions){
+    if (studentSCQQuestions && studentSCQQuestions) {
       dispatch(getQuizDetailsInitiate(quizId));
-    console.log("Allll Student SCQ ", studentSCQQuestions );
+      console.log("Allll Student SCQ ", studentSCQQuestions);
       dispatch(getRandomSCQInitiate(quizId, 3));
       // dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
     }
-    // return () => {
-    //   dispatch(resetSelectedClassQuizInitiate());
-    // };
+    return () => {
+      dispatch(resetSCQQuestionsInitiate());
+    };
   }, []);
+
+  const handleClickNext=(e)=>{
+    // console.log("Quest Index ", scqQuestionIndex);
+    if (scqQuestionIndex + 1 < studentSCQQuestions.length) {
+      setScqQuestionIndex(scqQuestionIndex + 1);
+    } else {
+      console.log("End of all Questions");
+    }
+  }
+
+  const handleClickPrev=(e)=>{
+    // console.log("Quest Index ", scqQuestionIndex);
+    if (scqQuestionIndex - 1 > -1) {
+      setScqQuestionIndex(scqQuestionIndex - 1);
+    } else {
+      console.log("Begining of all Questions");
+    }
+  }
+
+  const handleClickAnswer = (e) =>{
+    // console.log("Ans Click", e)
+    // console.log(e.target.dataset.id);
+
+    // const question = response.results[questionIndex];
+    // if (e.target.textContent === question.correct_answer) {
+    //   dispatch(scoreChangeInitiate(score + 1));
+    // }
+
+    // const ans = studentSCQQuestions[scqQuestionIndex].answer
+    // console.log("Quest Ans", ans);
+    var selectedSCQAns = e.target.dataset.id
+    const SCQQuestAns = studentSCQQuestions[scqQuestionIndex].answer
+
+    console.log("Selected Ans ", selectedSCQAns);
+    console.log("Question Ans ", SCQQuestAns);
+  }
 
   return (
     <>
@@ -116,41 +156,56 @@ const QuizMainBody = () => {
           <Grid item xs={12} sx={{textAlign: "left"}}>
             <Paper elevation={0} className={classes.quizDetailsLayout}>
               <Typography variant="body2" color="primary">
-                Question 1/3
+                Question {scqQuestionIndex+1}/{studentSCQQuestions.length}
               </Typography>
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={3} className={classes.quizDetailsLayout}>
+          {studentSCQQuestions &&
+                  studentSCQQuestions.map((scqItem, index) => (
+
+                    scqQuestionIndex == index?
+
+            <Paper elevation={3} className={classes.quizDetailsLayout} key={index}>
               <Grid item xs={12} mb={2}>
-                <Typography variant="h6">
-                  What is the state capital of Ogun? and Where is it Located?
-                </Typography>
+                
+                    
+                    <Typography variant="h6">
+                     { scqItem.question }
+                     {/* { studentSCQQuestions[scqQuestionIndex].question} */}
+                    </Typography> 
               </Grid>
               <Divider />
               <Grid item xs={12} mt={2}>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}}>
-                    Option A
+                  <Button variant="outlined" style={{textTransform: "none"}} data-id="A" onClick={handleClickAnswer} id="ansBtn">
+                   {scqItem.optionA}
                   </Button>
                 </p>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}}>
-                    Option B
+                  <Button variant="outlined" style={{textTransform: "none"}} data-id="B" onClick={handleClickAnswer} id="ansBtn">
+                  {scqItem.optionB}
+
                   </Button>
                 </p>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}}>
-                    Option c
+                  <Button variant="outlined" style={{textTransform: "none"}} data-id="C" onClick={handleClickAnswer} id="ansBtn">
+                  {scqItem.optionC}
+
                   </Button>
                 </p>
                 <p>
-                  <Button variant="outlined" style={{textTransform: "none"}}>
-                    Option D
+                  <Button variant="outlined" style={{textTransform: "none"}} data-id="D" onClick={handleClickAnswer} id="ansBtn">
+                  {scqItem.optionD}
+
                   </Button>
                 </p>
               </Grid>
             </Paper>
+            :
+            null
+            ))}  
+
           </Grid>
           <Grid item xs={12} mt={1}>
             <Paper elevation={3} className={classes.quizDetailsLayout}>
@@ -159,6 +214,8 @@ const QuizMainBody = () => {
                 color="secondary"
                 size="small"
                 style={{textTransform: "none"}}
+                onClick={handleClickPrev}
+                
               >
                 Previous
               </Button>
@@ -167,6 +224,7 @@ const QuizMainBody = () => {
                 size="small"
                 color="primary"
                 style={{textTransform: "none", float: "right"}}
+                onClick={handleClickNext}
               >
                 Next
               </Button>

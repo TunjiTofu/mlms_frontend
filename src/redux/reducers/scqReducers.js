@@ -22,11 +22,11 @@ const scqReducer = (state = initialState, {type, payload}) => {
     //     allQuizzes: [],
     //   };
 
-    // case ActionTypes.RESET_QUIZ_DETAILS:
-    //   return {
-    //     ...state,
-    //     selectedClassQuizDetails: {},
-    //   };
+    case ActionTypes.RESET_RANDOM_SCQ_QUESTIONS:
+      return {
+        ...state,
+        studentSCQQuestions: []
+      };
 
     default:
       return state;

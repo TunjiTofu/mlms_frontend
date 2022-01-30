@@ -89,9 +89,9 @@ export const getRandomSCQInitiate = (id, maxQuest) => {
 //   };
 // };
 
-// export const resetSelectedClassQuizInitiate = () => ({
-//   type: ActionTypes.RESET_SELECTED_CLASS_QUIZ,
-// });
+export const resetSCQQuestionsInitiate = () => ({
+  type: ActionTypes.RESET_RANDOM_SCQ_QUESTIONS,
+});
 
 // export const resetQuizDetailsInitiate = () => ({
 //     type: ActionTypes.RESET_QUIZ_DETAILS,
