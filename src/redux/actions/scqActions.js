@@ -33,7 +33,7 @@ export const getRandomSCQInitiate = (id, maxQuest) => {
     //   });
 
     db.qestOBJ
-      .where("quizId", "==", id)
+      .where("quizId", "==", id).where("status", "==", "active")
       .onSnapshot({includeMetadataChanges: true}, (querySnapshot) => {
         if (!querySnapshot.empty) {
           // console.log("QSnap", querySnapshot.docs);
