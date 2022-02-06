@@ -22,6 +22,9 @@ function ModuleMenuItems() {
         <Item component={Link} to={`/modules/${classId}`}>
           Class Modules
         </Item>
+        <Item component={Link} to={`/quizlist/${classId}`}>
+          Quizzes
+        </Item>
         <Item component={Link} to={"dfgdfg"}>
           Assignments
         </Item>

@@ -33,6 +33,10 @@ export const db = {
   classModules: dataB.collection("modules"),
   classPosts: dataB.collection("posts"),
   postComments: dataB.collection("comments"),
+  classQuizzes: dataB.collection("quizzes"),
+  qestOBJ: dataB.collection("questionsObj"),
+  qestBQ: dataB.collection("questionsBq"),
+  qestTHEORY: dataB.collection("questionsTheory"),
   getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
 };
 
