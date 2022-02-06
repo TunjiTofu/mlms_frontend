@@ -35,6 +35,8 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import FormErrors from "../../FormErrors";
+import { addStudentScoreInitiate } from "../../../redux/actions/scoreActions";
+import { db } from "../../../firebase";
 
 const QuizMainBody = () => {
   const {classId} = useParams();
@@ -185,8 +187,8 @@ const QuizMainBody = () => {
 
   //Initial Val
   const initialVal = {
-    answers: {},
-    id:{}
+    // answers: {},
+    answers: [],
   };
 
   // //Validation Schema
@@ -200,14 +202,15 @@ const QuizMainBody = () => {
     // setError("");
     // setSuccess("");
     console.log(val);
-    //console.log(val.answers);
-    // const formData = {
-    //   classCode: val.classCode,
-    //   userId: currentUser.uid,
-    //   joinedAt: db.getCurrentTimeStamp,
-    // };
+    console.log(val.answers);
+    const formData = {
+      classId: classId,
+      quizId: quizId,
+      answers: val.answers,
+      submittedAt: db.getCurrentTimeStamp,
+    };
     // console.log(formData);
-    // dispatch(addClassMemberInitiate(formData));
+    dispatch(addStudentScoreInitiate(formData));
     // handleClose()
     // onSubmitProps.resetForm();
     onSubmitProps.setSubmitting(false);
@@ -216,6 +219,7 @@ const QuizMainBody = () => {
   return (
     <>
       <Formik
+        enableReinitialize={true}
         initialValues={initialVal}
         // validationSchema={validationSchema}
         onSubmit={onSubmit}
@@ -274,29 +278,42 @@ const QuizMainBody = () => {
                               fullWidth
                             >
                               <Field
-                              as={TextField}
-                              autoFocus
-                              name={`qId.${scqItem.scqQuestionId}.id`}
-                              value={scqItem.scqQuestionId}
-                              type="text"
-                              variant="standard"
-                              fullWidth
-                              margin="normal"
-                              color="secondary"
-                              size="small"
-                              required
-                              helperText={
-                                <ErrorMessage
-                                  name="id"
-                                  component={FormErrors}
-                                />
-                              }
-                            />
+                                as={TextField}
+                                // name={`answers[${index}].id`}
+                                value={`${scqItem.scqQuestionId}`}
+                                // defaultValue={scqItem.scqQuestionId}
+                                type="text"
+                                // variant="standard"
+                                // fullWidth
+                                // margin="normal"
+                                // color="secondary"
+                                // size="small"
+                                // required
+                                // helperText={
+                                //   <ErrorMessage
+                                //     name="id"
+                                //     component={FormErrors}
+                                //   />
+                                // }
+                              />
                               <Field
                                 as={RadioGroup}
                                 aria-label="ender"
                                 // name={scqItem.scqQuestionId}
-                                name={`answers.${index}.selectedOption`}
+                                name={`answers[${index}].selectedOption`}
+                                onClick={() => {
+                                  formik.setFieldValue(
+                                    `answers[${index}].id`,
+                                    `${scqItem.scqQuestionId}`
+                                  );
+                                }}
+                                onChange={(event) => {
+                                  formik.setFieldValue(
+                                    `answers[${index}].selectedOption`,
+                                    event.currentTarget.value
+                                  );
+                                }}
+
                                 // style={{display: "initial"}}
                               >
                                 <FormControlLabel
