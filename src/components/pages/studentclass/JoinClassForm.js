@@ -137,7 +137,7 @@ function JoinClassForm() {
                     type="text"
                     placeholder="Enter Class Code"
                     variant="standard"
-                    fullWidth
+                    fullWidth 
                     margin="normal"
                     color="secondary"
                     size="small"
