@@ -9,7 +9,7 @@ export const addStudentScoreInitiate = (content) => {
   return function (dispatch) {
     console.log("Contentsssss ", content);
 
-    const stdScore = []
+    const stdScore = [];
     var sum = 0;
 
     content.answers.forEach(function (entry, index) {
@@ -26,12 +26,12 @@ export const addStudentScoreInitiate = (content) => {
             console.log("DB answer", dbAns);
 
             if (entry.selectedOption === dbAns) {
-                stdScore.push(1);
-                // stdScore[index] = 1;
+              stdScore.push(1);
+              // stdScore[index] = 1;
             }
           }
           console.log("Final Student Score Array", stdScore);
-          console.log("Final ------ score Length", stdScore.length);
+        //   console.log("Final ------ score Length", stdScore.length);
         });
 
       // scqQuestionsToStud.push({
@@ -43,13 +43,12 @@ export const addStudentScoreInitiate = (content) => {
       // console.log("Unique Doc -ID", docId);
     });
 
-    
+    setTimeout(() => {
+      console.log("New Final ------ score Length", stdScore.length);
+    }, 5000);
 
     dispatch(addStudentScore());
 
-
-
-   
     // db.classes
     //   .where("classCode", "==", content.classCode)
     //   .get()
