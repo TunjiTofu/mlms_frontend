@@ -1,4 +1,5 @@
 import {combineReducers} from "redux";
+import bqReducer from "./bqReducers";
 import classDetailsReducer from "./classDetailsReducer";
 import classMemberListReducer from "./classMembersListReducer";
 import classModuleReducer from "./classModuleReducer";
@@ -23,6 +24,7 @@ const reducers = combineReducers({
   selectedClassQuizzes: classQuizzesReducer,
   dbUser: userReducer,
   selectedSCQQuestions: scqReducer,
+  selectedBQQuestions: bqReducer,
 });
 
 export default reducers;

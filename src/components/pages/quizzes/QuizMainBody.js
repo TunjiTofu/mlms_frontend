@@ -35,12 +35,21 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import FormErrors from "../../FormErrors";
-import { addStudentScoreInitiate } from "../../../redux/actions/scoreActions";
-import { db } from "../../../firebase";
+import {addStudentScoreInitiate} from "../../../redux/actions/scoreActions";
+import {db} from "../../../firebase";
+import {useAuth} from "../../../context/AuthContext";
+import * as Yup from "yup";
+import {string} from "yup";
+import {
+  getRandomBQInitiate,
+  resetBQQuestionsInitiate,
+} from "../../../redux/actions/bqActions";
 
 const QuizMainBody = () => {
   const {classId} = useParams();
   const {quizId} = useParams();
+  const {currentUser} = useAuth();
+
   const classes = useStylesPages();
 
   const [value, setValue] = useState(0);
@@ -98,6 +107,10 @@ const QuizMainBody = () => {
     (state) => state.selectedSCQQuestions
   );
 
+  const {studentBQQuestions} = useSelector(
+    (state) => state.selectedBQQuestions
+  );
+
   const [scqQuestionIndex, setScqQuestionIndex] = useState(0);
 
   useEffect(() => {
@@ -105,10 +118,12 @@ const QuizMainBody = () => {
       dispatch(getQuizDetailsInitiate(quizId));
       console.log("Allll Student SCQ ", studentSCQQuestions);
       dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
+      dispatch(getRandomBQInitiate(quizId, selectedClassQuizDetails.noqBq));
       // dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
     }
     return () => {
       dispatch(resetSCQQuestionsInitiate());
+      dispatch(resetBQQuestionsInitiate());
     };
   }, []);
 
@@ -189,11 +204,16 @@ const QuizMainBody = () => {
   const initialVal = {
     // answers: {},
     answers: [],
+    bqAnswers: [],
   };
 
-  // //Validation Schema
+  //Validation Schema
   // const validationSchema = Yup.object().shape({
-  //   classCode: Yup.string().trim().required("This is a required field"),
+  //   answers: Yup.object({
+  //     id: string().required(),
+  //     selectedOption: string().required()
+  //   })
+  //   .required("Please upload a profile picture")
   // });
 
   //Onsubmit Function
@@ -203,10 +223,13 @@ const QuizMainBody = () => {
     // setSuccess("");
     console.log(val);
     console.log(val.answers);
+    console.log(val.bqAnswers);
     const formData = {
       classId: classId,
       quizId: quizId,
+      userId: currentUser.uid,
       answers: val.answers,
+      bqAnswers: val.bqAnswers,
       submittedAt: db.getCurrentTimeStamp,
     };
     // console.log(formData);
@@ -219,7 +242,7 @@ const QuizMainBody = () => {
   return (
     <>
       <Formik
-        enableReinitialize={true}
+        // enableReinitialize={true}
         initialValues={initialVal}
         // validationSchema={validationSchema}
         onSubmit={onSubmit}
@@ -270,6 +293,12 @@ const QuizMainBody = () => {
                             </Typography>
                           </Grid>
                           <Grid item xs={12} mt={2}>
+                            <Field
+                              as={TextField}
+                              value={`${scqItem.scqQuestionId}`}
+                              type="text"
+                              fullWidth
+                            />
                             <FormControl
                               component="fieldset"
                               margin="dense"
@@ -278,25 +307,6 @@ const QuizMainBody = () => {
                               fullWidth
                             >
                               <Field
-                                as={TextField}
-                                // name={`answers[${index}].id`}
-                                value={`${scqItem.scqQuestionId}`}
-                                // defaultValue={scqItem.scqQuestionId}
-                                type="text"
-                                // variant="standard"
-                                // fullWidth
-                                // margin="normal"
-                                // color="secondary"
-                                // size="small"
-                                // required
-                                // helperText={
-                                //   <ErrorMessage
-                                //     name="id"
-                                //     component={FormErrors}
-                                //   />
-                                // }
-                              />
-                              <Field
                                 as={RadioGroup}
                                 aria-label="ender"
                                 // name={scqItem.scqQuestionId}
@@ -304,7 +314,7 @@ const QuizMainBody = () => {
                                 onClick={() => {
                                   formik.setFieldValue(
                                     `answers[${index}].id`,
-                                    `${scqItem.scqQuestionId}`
+                                    `${scqItem.scqQuestionId}-scq`
                                   );
                                 }}
                                 onChange={(event) => {
@@ -313,8 +323,6 @@ const QuizMainBody = () => {
                                     event.currentTarget.value
                                   );
                                 }}
-
-                                // style={{display: "initial"}}
                               >
                                 <FormControlLabel
                                   value="A"
@@ -338,86 +346,16 @@ const QuizMainBody = () => {
                                 />
                               </Field>
                             </FormControl>
-                            {/* <FormHelperText>
+                            <FormHelperText>
                               <ErrorMessage
-                                name="role"
+                                name="answers"
                                 component={FormErrors}
                               />
-                            </FormHelperText> */}
+                            </FormHelperText>
                           </Grid>
                           <Divider />
                         </Paper>
                       ))}
-
-                    {/* {studentSCQQuestions &&
-              studentSCQQuestions.map((scqItem, index) =>
-                scqQuestionIndex == index ? (
-                  <Paper
-                    elevation={3}
-                    className={classes.quizDetailsLayout}
-                    key={index}
-                  >
-                    <Grid item xs={12} mb={2}>
-                      <Typography variant="h6">
-                        {/* { studentSCQQuestions[scqQuestionIndex].question} *
-                        {ReactHtmlParser(scqItem.question)}
-                      </Typography>
-                    </Grid>
-                    <Divider />
-                    <Grid item xs={12} mt={2}>
-                      <p>
-                        A.{" "}
-                        <Button
-                          variant="outlined"
-                          style={{textTransform: "none"}}
-                          data-id="A"
-                          onClick={handleClickAnswer("A")}
-                          id="ansBtn"
-                        >
-                          {ReactHtmlParser(scqItem.optionA)}
-                        </Button>
-                      </p>
-                      <p>
-                        B.{" "}
-                        <Button
-                          variant="outlined"
-                          style={{textTransform: "none"}}
-                          data-id="B"
-                          onClick={handleClickAnswer("B")}
-                          id="ansBtn"
-                        >
-                          {ReactHtmlParser(scqItem.optionB)}
-                        </Button>
-                      </p>
-                      <p>
-                        C.{" "}
-                        <Button
-                          variant="outlined"
-                          style={{textTransform: "none"}}
-                          data-id="C"
-                          onClick={handleClickAnswer("C")}
-                          id="ansBtn"
-                        >
-                          {ReactHtmlParser(scqItem.optionC)}
-                        </Button>
-                      </p>
-                      <p>
-                        D.{" "}
-                        <Button
-                          variant="outlined"
-                          style={{textTransform: "none"}}
-                          data-id="D"
-                          onClick={handleClickAnswer("D")}
-                          id="ansBtn"
-                        >
-                          {ReactHtmlParser(scqItem.optionD)}
-                        </Button>
-                      </p>
-                      <input type="radio" value="radio" name="radio" />
-                    </Grid>
-                  </Paper>
-                ) : null
-              )} */}
                   </Grid>
                   <Grid item xs={12} mt={1}>
                     <Paper elevation={3} className={classes.quizDetailsLayout}>
@@ -452,34 +390,73 @@ const QuizMainBody = () => {
                     </Paper>
                   </Grid>
                   <Grid item xs={12}>
-                    <Paper elevation={3} className={classes.quizDetailsLayout}>
-                      <Grid item xs={12} mb={2}>
-                        <Typography variant="h6">
-                          Water is good for the human body?
-                        </Typography>
-                      </Grid>
-                      <Divider />
-                      <Grid
-                        item
-                        xs={12}
-                        mt={2}
-                        sx={{display: "flex", justifyContent: "space-around"}}
-                      >
-                        <Button
-                          variant="outlined"
-                          style={{textTransform: "none"}}
+                    {studentBQQuestions &&
+                      studentBQQuestions.map((bqItem, index) => (
+                        <Paper
+                          elevation={3}
+                          className={classes.quizDetailsLayout}
+                          key={index}
                         >
-                          True
-                        </Button>
-
-                        <Button
-                          variant="outlined"
-                          style={{textTransform: "none"}}
-                        >
-                          False
-                        </Button>
-                      </Grid>
-                    </Paper>
+                          <Grid item xs={12} mb={2}>
+                            <Typography variant="h6">
+                              {/* { studentSCQQuestions[scqQuestionIndex].question} * */}
+                              {ReactHtmlParser(bqItem.question)}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} mt={2}>
+                          <Field
+                              as={TextField}
+                              value={`${bqItem.bqQuestionId}`}
+                              type="text"
+                              fullWidth
+                            />
+                            <FormControl
+                              component="fieldset"
+                              margin="dense"
+                              required
+                              color="secondary"
+                              fullWidth
+                            >
+                              <Field
+                                as={RadioGroup}
+                                aria-label="ender"
+                                // name={scqItem.scqQuestionId}
+                                name={`bqAnswers[${index}].selectedOption`}
+                                onClick={() => {
+                                  formik.setFieldValue(
+                                    `bqAnswers[${index}].id`,
+                                    `${bqItem.bqQuestionId}-bq`
+                                  );
+                                }}
+                                onChange={(event) => {
+                                  formik.setFieldValue(
+                                    `bqAnswers[${index}].selectedOption`,
+                                    event.currentTarget.value
+                                  );
+                                }}
+                              >
+                                <FormControlLabel
+                                  value="T"
+                                  control={<Radio />}
+                                  label="True"
+                                />
+                                <FormControlLabel
+                                  value="F"
+                                  control={<Radio />}
+                                  label="False"
+                                />
+                              </Field>
+                            </FormControl>
+                            <FormHelperText>
+                              <ErrorMessage
+                                name="answers"
+                                component={FormErrors}
+                              />
+                            </FormHelperText>
+                          </Grid>
+                          <Divider />
+                        </Paper>
+                      ))}
                   </Grid>
                   <Grid item xs={12} mt={1}>
                     <Paper
