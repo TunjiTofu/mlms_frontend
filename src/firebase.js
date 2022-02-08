@@ -35,8 +35,9 @@ export const db = {
   postComments: dataB.collection("comments"),
   classQuizzes: dataB.collection("quizzes"),
   qestOBJ: dataB.collection("questionsObj"),
-  qestBQ: dataB.collection("questionsBq"),
-  qestTHEORY: dataB.collection("questionsTheory"),
+  questBQ: dataB.collection("questionsBq"),
+  questTHEORY: dataB.collection("questionsTheory"),
+  scores: dataB.collection("scores"),
   getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
 };
 

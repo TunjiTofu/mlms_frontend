@@ -9,30 +9,35 @@ export const addStudentScoreInitiate = (content) => {
   return function (dispatch) {
     console.log("Contentsssss ", content);
 
-    const stdScore = []
+    const stdScqScore = [];
     var sum = 0;
 
     content.answers.forEach(function (entry, index) {
       console.log("My entry", entry.id);
+      const wordArray = entry.id.split("-");
+      console.log("Word Array 0", wordArray[0]);
+      console.log("Word Array 1", wordArray[1]);
 
-      db.qestOBJ
-        .doc(entry.id)
-        .get()
-        .then((querySnapshot) => {
-          if (!querySnapshot.empty) {
-            // console.log("querySnapshot", querySnapshot.data().question);
-            let dbAns = querySnapshot.data().answer;
-            console.log("Selected Ans", entry.selectedOption);
-            console.log("DB answer", dbAns);
+      if (wordArray[1] === "scq") {
+        db.qestOBJ
+          .doc(wordArray[0])
+          .get()
+          .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+              // console.log("querySnapshot", querySnapshot.data().question);
+              let dbAns = querySnapshot.data().answer;
+              console.log("Selected Ans", entry.selectedOption);
+              console.log("DB answer", dbAns);
 
-            if (entry.selectedOption === dbAns) {
-                stdScore.push(1);
+              if (entry.selectedOption === dbAns) {
+                stdScqScore.push(1);
                 // stdScore[index] = 1;
+              }
             }
-          }
-          console.log("Final Student Score Array", stdScore);
-          console.log("Final ------ score Length", stdScore.length);
-        });
+            console.log("Final Student Score Array", stdScqScore);
+            //   console.log("Final ------ score Length", stdScqScore.length);
+          });
+      }
 
       // scqQuestionsToStud.push({
       //   ...querySnapshot.docs[entry].data(),
@@ -43,13 +48,30 @@ export const addStudentScoreInitiate = (content) => {
       // console.log("Unique Doc -ID", docId);
     });
 
-    
+    setTimeout(() => {
+      console.log("New Final ------ score Length", stdScqScore.length);
+      const score_data = {
+        classId: content.classId,
+        quizId: content.quizId,
+        userId: content.userId,
+        submittedAt: content.submittedAt,
+        scqScore: stdScqScore.length,
+      };
+      const newId = content.userId + "-" + content.quizId;
+      console.log("Score Data", score_data); 
+      db.scores
+        .doc(newId)
+        .set(score_data)
+        .then(() => {
+          console.log("Score Data inserted");
+        })
+        .catch(() => {
+          console.log("Error inserting score data");
+        });
+    }, 5000);
 
     dispatch(addStudentScore());
 
-
-
-   
     // db.classes
     //   .where("classCode", "==", content.classCode)
     //   .get()
