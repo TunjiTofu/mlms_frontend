@@ -6,6 +6,7 @@ import classModuleReducer from "./classModuleReducer";
 import classPostsReducer from "./classPostsReducers";
 import classQuizzesReducer from "./classQuizzesReducer";
 import postCommentsReducer from "./postCommentsReducer";
+import scoreReducers from "./scoreReducers";
 import scqReducer from "./scqReducers";
 import userReducer from "./userReducer";
 // import {classReducer} from "./classReducer";
@@ -25,6 +26,7 @@ const reducers = combineReducers({
   dbUser: userReducer,
   selectedSCQQuestions: scqReducer,
   selectedBQQuestions: bqReducer,
+  studentQuizScore: scoreReducers,
 });
 
 export default reducers;

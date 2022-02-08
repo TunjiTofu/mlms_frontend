@@ -285,6 +285,7 @@ const QuizMainBody = () => {
                           elevation={3}
                           className={classes.quizDetailsLayout}
                           key={index}
+                          sx={{ marginBottom:2 }}
                         >
                           <Grid item xs={12} mb={2}>
                             <Typography variant="h6">
@@ -314,7 +315,7 @@ const QuizMainBody = () => {
                                 onClick={() => {
                                   formik.setFieldValue(
                                     `answers[${index}].id`,
-                                    `${scqItem.scqQuestionId}-scq`
+                                    `${scqItem.scqQuestionId}`
                                   );
                                 }}
                                 onChange={(event) => {
@@ -425,7 +426,7 @@ const QuizMainBody = () => {
                                 onClick={() => {
                                   formik.setFieldValue(
                                     `bqAnswers[${index}].id`,
-                                    `${bqItem.bqQuestionId}-bq`
+                                    `${bqItem.bqQuestionId}`
                                   );
                                 }}
                                 onChange={(event) => {
@@ -436,12 +437,12 @@ const QuizMainBody = () => {
                                 }}
                               >
                                 <FormControlLabel
-                                  value="T"
+                                  value="true"
                                   control={<Radio />}
                                   label="True"
                                 />
                                 <FormControlLabel
-                                  value="F"
+                                  value="false"
                                   control={<Radio />}
                                   label="False"
                                 />
@@ -584,7 +585,7 @@ const QuizMainBody = () => {
         }}
       </Formik>
 
-      <Box sx={{maxWidth: 400, flexGrow: 1}}>
+      {/* <Box sx={{maxWidth: 400, flexGrow: 1}}>
         <Paper
           square
           elevation={0}
@@ -636,7 +637,7 @@ const QuizMainBody = () => {
             </Button>
           }
         />
-      </Box>
+      </Box> */}
     </>
   );
 };
