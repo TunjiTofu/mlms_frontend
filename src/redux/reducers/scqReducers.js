@@ -13,6 +13,12 @@ const scqReducer = (state = initialState, {type, payload}) => {
         studentSCQQuestions: payload,
       };
 
+    case ActionTypes.SELECT_SCQ_OPTION:
+      return {
+        ...state,
+        studentSCQQuestions: payload,
+      };
+
     case ActionTypes.GET_SCORE:
       return {
         ...state,
