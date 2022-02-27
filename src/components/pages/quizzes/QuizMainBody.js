@@ -16,8 +16,9 @@ import {
 } from "@mui/material";
 import {useTheme} from "@mui/styles";
 import {Box} from "@mui/system";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import {useStylesPages} from "../../../Styles/PageStyles";
@@ -44,13 +45,17 @@ import {
   getRandomBQInitiate,
   resetBQQuestionsInitiate,
 } from "../../../redux/actions/bqActions";
+import CountDownTimer from "./CountDownTimer";
 
 const QuizMainBody = () => {
   const {classId} = useParams();
   const {quizId} = useParams();
   const {currentUser} = useAuth();
 
+  const history = useHistory();
   const classes = useStylesPages();
+
+  const [interval, setInterval] = useState(null);
 
   const [value, setValue] = useState(0);
 
@@ -200,6 +205,37 @@ const QuizMainBody = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  // const hours = 0
+  // const minutes = 3
+  // const seconds = 0
+  // const [[hrs, mins, secs], setTime] = React.useState([
+  //   hours,
+  //   minutes,
+  //   seconds,
+  // ]);
+
+  // const tick = () => {
+  //   // if (hrs === 0 && mins === 0 && secs === 0) reset();
+  //   if (hrs === 0 && mins === 0 && secs === 0){
+  //     onSubmit();
+  //   }
+  //   else if (mins === 0 && secs === 0) {
+  //     setTime([hrs - 1, 59, 59]);
+  //   } else if (secs === 0) {
+  //     setTime([hrs, mins - 1, 59]);
+  //   } else {
+  //     setTime([hrs, mins, secs - 1]);
+  //   }
+  // };
+
+  // // const reset = () =>
+  // //   setTime([parseInt(hours), parseInt(minutes), parseInt(seconds)]);
+
+  // useEffect(() => {
+  //   const timerId = setInterval(() => tick(), 1000);
+  //   return () => clearInterval(timerId);
+  // });
+
   //Initial Val
   const initialVal = {
     // answers: {},
@@ -237,10 +273,22 @@ const QuizMainBody = () => {
     // handleClose()
     // onSubmitProps.resetForm();
     onSubmitProps.setSubmitting(false);
+    setTimeout(() => {
+      history.push(`/quizlist/${classId}`);
+    }, 12000);
   };
+
+  const hoursMinSecs = {hours: 0, minutes: 1, seconds: 0};
+
+  
 
   return (
     <>
+    {/* <CountDownTimer hoursMinSecs={hoursMinSecs} /> */}
+      {/* {`${mins.toString().padStart(2, "0")}:${secs
+        .toString()
+        .padStart(2, "0")}`} */}
+
       <Formik
         // enableReinitialize={true}
         initialValues={initialVal}
@@ -285,7 +333,7 @@ const QuizMainBody = () => {
                           elevation={3}
                           className={classes.quizDetailsLayout}
                           key={index}
-                          sx={{ marginBottom:2 }}
+                          sx={{marginBottom: 2}}
                         >
                           <Grid item xs={12} mb={2}>
                             <Typography variant="h6">
@@ -405,7 +453,7 @@ const QuizMainBody = () => {
                             </Typography>
                           </Grid>
                           <Grid item xs={12} mt={2}>
-                          <Field
+                            <Field
                               as={TextField}
                               value={`${bqItem.bqQuestionId}`}
                               type="text"
