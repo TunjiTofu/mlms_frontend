@@ -10,11 +10,14 @@ import {
 } from "../../../redux/actions/quizAction";
 import {useStylesPages} from "../../../Styles/PageStyles";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import CountDownTimer from "./CountDownTimer";
 
 const QuizMainHeader = () => {
   const {classId} = useParams();
   const {quizId} = useParams();
   const classes = useStylesPages();
+
+  const hoursMinSecs = {hours: 0, minutes: 1, seconds: 0};
 
   const dispatch = useDispatch();
   const {selectedClassQuizDetails} = useSelector(
@@ -31,7 +34,7 @@ const QuizMainHeader = () => {
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={7}>
         <Paper elevation={3} className={classes.quizDetailsLayout}>
           <Typography variant="h5" color="primary" gutterBottom>
             <b>{selectedClassQuizDetails.title}</b>
@@ -59,7 +62,7 @@ const QuizMainHeader = () => {
         </Paper>
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={5}>
         <Paper elevation={3} className={classes.quizDetailsLayout}>
           <p>
             <Button
@@ -72,7 +75,7 @@ const QuizMainHeader = () => {
             </Button>
           </p>
           <Typography variant="h2" color="primary">
-            <AccessTimeOutlinedIcon sx={{fontSize: 50}} /> 15:00
+            <AccessTimeOutlinedIcon sx={{fontSize: 50}} /><CountDownTimer hoursMinSecs={hoursMinSecs} />
           </Typography>
         </Paper>
       </Grid>

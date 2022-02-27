@@ -6,6 +6,10 @@ const getRandomScq = (scq) => ({
   payload: scq,
 });
 
+const selectSCQOption = (option) => ({
+  type: ActionTypes.SELECT_SCQ_OPTION,
+  payload: option,
+});
 
 
 
@@ -91,6 +95,12 @@ export const getRandomSCQInitiate = (id, maxQuest) => {
 //       });
 //   };
 // };
+
+// export const selectOptionInitiate = (scqIndexSelected, optionSelected, studentSCQQuestions) => {
+//   return function (dispatch) {
+// dispatch(selectSCQOption({...studentSCQQuestions[0], selected:true} ))
+//   }
+// }
 
 export const resetSCQQuestionsInitiate = () => ({
   type: ActionTypes.RESET_RANDOM_SCQ_QUESTIONS,

@@ -103,6 +103,15 @@ function QuizDetails() {
           >
             Start Quiz
           </Button>
+          <Button
+            variant="contained"
+            color="success"
+            component={Link}
+            to={`/quizmainnew/${classId}/${quizId}`}
+            startIcon={<PlayCircleOutlinedIcon />}
+          >
+            Start New Quiz
+          </Button>
         </Paper>
       )}
     </div>
