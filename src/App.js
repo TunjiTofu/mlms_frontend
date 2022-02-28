@@ -16,6 +16,7 @@ import QuizList from "./components/pages/quizzes/QuizList";
 import QuizDetails from "./components/pages/quizzes/QuizDetails";
 import QuizMain from "./components/pages/quizzes/QuizMain";
 import QuizMainBodyNew from "./components/pages/quizzes/QuizMainBodyNew";
+import QuizSummary from "./components/pages/quizzes/QuizSummary";
 
 // Primary - #039be5
 const theme = createTheme({
@@ -64,6 +65,8 @@ function App() {
               <PrivateRoute exact path="/quiz/:classId/:quizId" component={QuizDetails} />
               <PrivateRoute exact path="/quizmain/:classId/:quizId" component={QuizMain} />
               <PrivateRoute exact path="/quizmainnew/:classId/:quizId" component={QuizMainBodyNew} />
+              <PrivateRoute exact path="/summary" component={QuizSummary} />
+              
               {/* <Route>404 Not Found!</Route> */}
             </LayoutPage>
           </Switch>

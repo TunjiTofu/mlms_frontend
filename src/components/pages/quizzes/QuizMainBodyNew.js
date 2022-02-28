@@ -20,7 +20,7 @@ import React, {useEffect, useState} from "react";
 import {Box} from "@mui/system";
 import {useTheme} from "@mui/styles";
 import SwipeableViews from "react-swipeable-views";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useAuth} from "../../../context/AuthContext";
 import PropTypes from "prop-types";
 import {useDispatch, useSelector} from "react-redux";
@@ -110,6 +110,11 @@ const QuizMainBodyNew = () => {
   }, []);
 
   const [scqQuiz, setSCQQuiz] = useState([]);
+  const [score, setScore] = useState({
+    correct: 0,
+    false: 0,
+    length: 0,
+  });
 
   const selectOption = (scqIndexSelected, optionSelected) => {
     // console.log("Index", scqIndexSelected);
@@ -134,32 +139,11 @@ const QuizMainBodyNew = () => {
             selected: true,
           },
         ]);
-
-    // setSCQQuiz(
-    //   // quiz[scqIndexSelected].index === scqIndexSelected ?
-    //   typeof scqQuiz[scqIndexSelected] === "undefined"
-    //     ? [
-    //         ...scqQuiz,
-    //          {
-    //           index: scqIndexSelected,
-    //           optionSelected: optionSelected,
-    //           selected: true,
-    //         },
-    //       ]
-    //     : scqQuiz.map((item, index) =>
-    //         item.index === scqIndexSelected
-    //           ? (scqQuiz[scqIndexSelected] = {
-    //               ...item,
-    //               optionSelected: optionSelected,
-    //             })
-    //           : item
-    //       )
-    // );
   };
 
-  useEffect(() => {
-    console.log("Quiz", scqQuiz);
-  }, [scqQuiz]);
+  // useEffect(() => {
+  //   console.log("Quiz", scqQuiz);
+  // }, [scqQuiz]);
 
   const previousQuestion = () => {
     if (scqQuestionIndex === 0) return;
@@ -170,6 +154,26 @@ const QuizMainBodyNew = () => {
     if (studentSCQQuestions.length - 1 === scqQuestionIndex) return;
     setScqQuestionIndex(scqQuestionIndex + 1);
   };
+
+  const checkScore = () => {
+    const questionAnswered = scqQuiz.filter((item) => item.optionSelected);
+    // console.log("Q Answered", questionAnswered);
+    const questionCorrect = questionAnswered.filter(
+      (item) => item.optionSelected === studentSCQQuestions[item.sqIndex].answer
+    );
+    // console.log("Q Correct", questionCorrect);
+    setScore({
+      correct: questionCorrect.length,
+      false: studentSCQQuestions.length - questionCorrect.length,
+      length: studentSCQQuestions.length,
+    });
+  };
+
+  useEffect(() => {
+    checkScore();
+  }, [scqQuiz]);
+
+  console.log("Final Score ", score);
 
   return (
     <>
@@ -352,16 +356,29 @@ const QuizMainBodyNew = () => {
               </Button>
 
               {studentSCQQuestions.length - 1 === scqQuestionIndex ? (
-                <Button
-                  variant="contained"
-                  size="small"
-                  color="success"
-                  href="#"
-                  //   to={"/summary"}
-                  //   state={{quiz, score}}
+                <Link
+                  // variant="contained"
+                  // size="small"
+                  // color="success"
+                  // // href={"/summary"}
+                  // to={"/summary"}
+                  // state={{studentSCQQuestions, score}}
+                  component="button"
+                  style={{
+                    textDecoration: "none",
+                    backgroundColor: "green",
+                    color: "#fff",
+                    padding: 4,
+                    borderRadius: 5,
+                    fontSize: 15, border: "none"
+                  }}
+                  to={{
+                    pathname: "/summary",
+                    state: {studentSCQQuestions, scqQuiz, score},
+                  }}
                 >
-                  Finish
-                </Button>
+                  Done with OBJ
+                </Link>
               ) : (
                 <Button
                   variant="contained"
