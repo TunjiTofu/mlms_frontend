@@ -1,7 +1,7 @@
 import {ActionTypes} from "../constants/action-types";
 
 const initialState = {
-  studentBQQQuestions: [],
+  studentBQQuestions: [],
   studentScore: 0,
 };
 

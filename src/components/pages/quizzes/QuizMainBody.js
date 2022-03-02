@@ -122,6 +122,7 @@ const QuizMainBody = () => {
     if (studentSCQQuestions && studentSCQQuestions) {
       dispatch(getQuizDetailsInitiate(quizId));
       console.log("Allll Student SCQ ", studentSCQQuestions);
+      console.log("Allll Student BQ ", studentBQQuestions);
       dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
       dispatch(getRandomBQInitiate(quizId, selectedClassQuizDetails.noqBq));
       // dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
