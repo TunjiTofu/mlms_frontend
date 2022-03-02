@@ -75,7 +75,7 @@ const QuizMainHeader = () => {
             </Button>
           </p>
           <Typography variant="h2" color="primary">
-            <AccessTimeOutlinedIcon sx={{fontSize: 50}} /><CountDownTimer hoursMinSecs={hoursMinSecs} />
+            {/* <AccessTimeOutlinedIcon sx={{fontSize: 50}} /><CountDownTimer hoursMinSecs={hoursMinSecs} /> */}
           </Typography>
         </Paper>
       </Grid>

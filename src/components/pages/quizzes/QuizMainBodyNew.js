@@ -20,7 +20,7 @@ import React, {useEffect, useState} from "react";
 import {Box} from "@mui/system";
 import {useTheme} from "@mui/styles";
 import SwipeableViews from "react-swipeable-views";
-import {Link, useParams} from "react-router-dom";
+import {Link, useHistory, useParams} from "react-router-dom";
 import {useAuth} from "../../../context/AuthContext";
 import PropTypes from "prop-types";
 import {useDispatch, useSelector} from "react-redux";
@@ -37,6 +37,8 @@ import {
   getRandomBQInitiate,
   resetBQQuestionsInitiate,
 } from "../../../redux/actions/bqActions";
+import {useTimer} from "react-timer-hook";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 const QuizMainBodyNew = () => {
   const {classId} = useParams();
@@ -141,7 +143,6 @@ const QuizMainBodyNew = () => {
     bqFalse: 0,
     bqLength: 0,
   });
-
 
   const selectOption = (scqIndexSelected, optionSelected) => {
     // console.log("Index", scqIndexSelected);
@@ -257,11 +258,96 @@ const QuizMainBodyNew = () => {
     checkBqScore();
   }, [bqQuiz]);
 
-  console.log("Final SCQ Score ", score);
-  console.log("Final BQ Score ", bqScore);
+  // console.log("Final SCQ Score ", score);
+  // console.log("Final BQ Score ", bqScore);
+
+  const history = useHistory();
+
+
+  const MINUTES = 1 * 60;
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + MINUTES); // 10 minutes timer
+
+  const {
+    seconds,
+    minutes,
+    hours,
+    // days,
+    // isRunning,
+    // start,
+    // pause,
+    // resume,
+    // restart,
+  } = useTimer({
+    expiryTimestamp: time,
+    onExpire: () =>
+      // alert("time up"),
+      history.push("/summary", {
+        state: {
+          studentSCQQuestions,
+          scqQuiz,
+          score,
+          studentBQQuestions,
+          bqQuiz,
+          bqScore,
+          classId,
+          quizId,
+          userID,
+        },
+      }),
+  });
 
   return (
     <>
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={7}>
+          <Paper elevation={3} className={classes.quizDetailsLayout}>
+            <Typography variant="h5" color="primary" gutterBottom>
+              <b>{selectedClassQuizDetails.title}</b>
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              <b>
+                <h className={classes.txtSecondary}>Duration:</h>{" "}
+              </b>
+              {selectedClassQuizDetails.duration} mins.
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              <b>
+                <h className={classes.txtSecondary}>Number of Questions:</h>{" "}
+              </b>
+              <b>OBJ:</b> {selectedClassQuizDetails.noqScq};<b>T/F: </b>
+              {selectedClassQuizDetails.noqBq};<b>Theory: </b>{" "}
+              {selectedClassQuizDetails.noqTheory}
+            </Typography>
+            <Typography variant="subtitle1" gutterBottom></Typography>
+            <Typography
+              variant="subtitle2"
+              color="secondary"
+              sx={{marginLeft: 2}}
+            ></Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <Paper elevation={3} className={classes.quizDetailsLayout}>
+            <p>
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                style={{textTransform: "none", float: "right"}}
+              >
+                Quit Test
+              </Button>
+            </p>
+            <Typography variant="h2" color="primary">
+              {/* Timer: {hours}:
+        {minutes}:{seconds} */}
+              <AccessTimeOutlinedIcon sx={{fontSize: 50}} />
+              {hours}:{minutes}:{seconds}
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
       <div>QuizMainBodyNew</div>
       <Box>
         <Tabs
@@ -439,15 +525,19 @@ const QuizMainBodyNew = () => {
               </Button>
 
               <Button
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  style={{textTransform: "none"}}
-                  onClick={() => nextQuestion()}
-                disabled={studentSCQQuestions.length - 1 === scqQuestionIndex ? true : false}
-                >
-                  Next
-                </Button>
+                variant="contained"
+                size="small"
+                color="primary"
+                style={{textTransform: "none"}}
+                onClick={() => nextQuestion()}
+                disabled={
+                  studentSCQQuestions.length - 1 === scqQuestionIndex
+                    ? true
+                    : false
+                }
+              >
+                Next
+              </Button>
 
               {/* {studentSCQQuestions.length - 1 === scqQuestionIndex ? (
                 <Link
@@ -601,15 +691,19 @@ const QuizMainBodyNew = () => {
               </Button>
 
               <Button
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  style={{textTransform: "none"}}
-                  onClick={() => nextBqQuestion()}
-                disabled={studentBQQuestions.length - 1 === bqQuestionIndex ? true : false}
-                >
-                  Next
-                </Button>
+                variant="contained"
+                size="small"
+                color="primary"
+                style={{textTransform: "none"}}
+                onClick={() => nextBqQuestion()}
+                disabled={
+                  studentBQQuestions.length - 1 === bqQuestionIndex
+                    ? true
+                    : false
+                }
+              >
+                Next
+              </Button>
 
               {/* {studentBQQuestions.length - 1 === bqQuestionIndex ? (
                 <Link
@@ -637,7 +731,7 @@ const QuizMainBodyNew = () => {
                   onClick={() => nextBqQuestion()}
                 >
                   Next
-                </Button> 
+                </Button>
               )}*/}
             </Paper>
           </Grid>
@@ -653,12 +747,22 @@ const QuizMainBodyNew = () => {
             padding: 10,
             borderRadius: 3,
             fontSize: 15,
-            display:"grid",
-            justifyContent:"center"
+            display: "grid",
+            justifyContent: "center",
           }}
           to={{
             pathname: "/summary",
-            state: {studentSCQQuestions, scqQuiz, score, studentBQQuestions, bqQuiz, bqScore, classId, quizId, userID},
+            state: {
+              studentSCQQuestions,
+              scqQuiz,
+              score,
+              studentBQQuestions,
+              bqQuiz,
+              bqScore,
+              classId,
+              quizId,
+              userID,
+            },
           }}
         >
           Submit Exam

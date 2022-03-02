@@ -19,6 +19,7 @@ function QuizMain() {
       <QuizMainHeader />
 
       <QuizMainBody />
+      {/* <QuizMainBody /> */}
 
       {/* </Grid> */}
     </>
