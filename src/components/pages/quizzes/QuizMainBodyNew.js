@@ -33,11 +33,16 @@ import {
 import {useStylesPages} from "../../../Styles/PageStyles";
 import ReactHtmlParser from "react-html-parser";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import {
+  getRandomBQInitiate,
+  resetBQQuestionsInitiate,
+} from "../../../redux/actions/bqActions";
 
 const QuizMainBodyNew = () => {
   const {classId} = useParams();
   const {quizId} = useParams();
   const {currentUser} = useAuth();
+  const userID = currentUser.uid;
   const classes = useStylesPages();
 
   const theme = useTheme();
@@ -93,66 +98,127 @@ const QuizMainBodyNew = () => {
     (state) => state.selectedSCQQuestions
   );
 
+  const {studentBQQuestions} = useSelector(
+    (state) => state.selectedBQQuestions
+  );
+
   const [scqQuestionIndex, setScqQuestionIndex] = useState(0);
+  const [bqQuestionIndex, setBqQuestionIndex] = useState(0);
 
   useEffect(() => {
-    if (studentSCQQuestions && studentSCQQuestions) {
-      dispatch(getQuizDetailsInitiate(quizId));
-      console.log("Allll Student SCQ ", studentSCQQuestions);
-      dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
-      //   dispatch(getRandomBQInitiate(quizId, selectedClassQuizDetails.noqBq));
-      // dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
-    }
+    // if (studentSCQQuestions && studentSCQQuestions) {
+    dispatch(getQuizDetailsInitiate(quizId));
+
+    dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
+    dispatch(getRandomBQInitiate(quizId, selectedClassQuizDetails.noqBq));
+
+    console.log("Allll Student SCQ ", studentSCQQuestions);
+    console.log("Allll Student BQ ", studentBQQuestions);
+    // }
+    // if (studentBQQuestions && studentBQQuestions) {
+    // dispatch(getQuizDetailsInitiate(quizId));
+
+    //   console.log("Allll Student BQ ", studentBQQuestions);
+    //   dispatch(getRandomBQInitiate(quizId, selectedClassQuizDetails.noqBq));
+    // }
     return () => {
       dispatch(resetSCQQuestionsInitiate());
-      //   dispatch(resetBQQuestionsInitiate());
+      dispatch(resetBQQuestionsInitiate());
     };
   }, []);
 
   const [scqQuiz, setSCQQuiz] = useState([]);
+  const [bqQuiz, setBQQuiz] = useState([]);
+
   const [score, setScore] = useState({
     correct: 0,
     false: 0,
     length: 0,
   });
 
+  const [bqScore, setBqScore] = useState({
+    bqCorrect: 0,
+    bqFalse: 0,
+    bqLength: 0,
+  });
+
+
   const selectOption = (scqIndexSelected, optionSelected) => {
     // console.log("Index", scqIndexSelected);
     // console.log("Option Sele", optionSelected);
 
-    scqQuiz.some((item) => item.sqIndex === scqIndexSelected)
-      ? setSCQQuiz(
-          scqQuiz.map((item, index) =>
-            item.sqIndex === scqIndexSelected
-              ? (scqQuiz[scqIndexSelected] = {
-                  ...item,
-                  optionSelected: optionSelected,
-                })
-              : item
+    setTimeout(() => {
+      scqQuiz.some((item) => item.sqIndex === scqIndexSelected)
+        ? setSCQQuiz(
+            scqQuiz.map((item, index) =>
+              item.sqIndex === scqIndexSelected
+                ? (scqQuiz[scqIndexSelected] = {
+                    ...item,
+                    optionSelected: optionSelected,
+                  })
+                : item
+            )
           )
-        )
-      : setSCQQuiz([
-          ...scqQuiz,
-          {
-            sqIndex: scqIndexSelected,
-            optionSelected: optionSelected,
-            selected: true,
-          },
-        ]);
+        : setSCQQuiz([
+            ...scqQuiz,
+            {
+              sqIndex: scqIndexSelected,
+              optionSelected: optionSelected,
+              selected: true,
+            },
+          ]);
+    }, 200);
   };
 
-  // useEffect(() => {
-  //   console.log("Quiz", scqQuiz);
-  // }, [scqQuiz]);
+  const selectBQOption = (bqIndexSelected, optionSelected) => {
+    // console.log("Index", bqIndexSelected);
+    // console.log("Option Sele", optionSelected);
+
+    setTimeout(() => {
+      bqQuiz.some((item) => item.bqIndex === bqIndexSelected)
+        ? setBQQuiz(
+            bqQuiz.map((item, index) =>
+              item.bqIndex === bqIndexSelected
+                ? (bqQuiz[bqIndexSelected] = {
+                    ...item,
+                    optionSelected: optionSelected,
+                  })
+                : item
+            )
+          )
+        : setBQQuiz([
+            ...bqQuiz,
+            {
+              bqIndex: bqIndexSelected,
+              optionSelected: optionSelected,
+              selected: true,
+            },
+          ]);
+    }, 200);
+  };
+
+  useEffect(() => {
+    console.log("T/FFF", bqQuiz);
+  }, [bqQuiz]);
 
   const previousQuestion = () => {
     if (scqQuestionIndex === 0) return;
     setScqQuestionIndex(scqQuestionIndex - 1);
   };
 
+  const previousBqQuestion = () => {
+    if (bqQuestionIndex === 0) return;
+    setBqQuestionIndex(bqQuestionIndex - 1);
+  };
+
   const nextQuestion = () => {
     if (studentSCQQuestions.length - 1 === scqQuestionIndex) return;
     setScqQuestionIndex(scqQuestionIndex + 1);
+  };
+
+  const nextBqQuestion = () => {
+    if (studentBQQuestions.length - 1 === bqQuestionIndex) return;
+    setBqQuestionIndex(bqQuestionIndex + 1);
   };
 
   const checkScore = () => {
@@ -169,11 +235,30 @@ const QuizMainBodyNew = () => {
     });
   };
 
+  const checkBqScore = () => {
+    const questionBqAnswered = bqQuiz.filter((item) => item.optionSelected);
+    // console.log("Q Answered", questionAnswered);
+    const questionBqCorrect = questionBqAnswered.filter(
+      (item) => item.optionSelected === studentBQQuestions[item.bqIndex].answer
+    );
+    // console.log("Q Correct", questionCorrect);
+    setBqScore({
+      bqCorrect: questionBqCorrect.length,
+      bqFalse: studentBQQuestions.length - questionBqCorrect.length,
+      bqLength: studentBQQuestions.length,
+    });
+  };
+
   useEffect(() => {
     checkScore();
   }, [scqQuiz]);
 
-  console.log("Final Score ", score);
+  useEffect(() => {
+    checkBqScore();
+  }, [bqQuiz]);
+
+  console.log("Final SCQ Score ", score);
+  console.log("Final BQ Score ", bqScore);
 
   return (
     <>
@@ -244,8 +329,6 @@ const QuizMainBodyNew = () => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            {/* {studentSCQQuestions.optionA} */}
-
             {studentSCQQuestions &&
               studentSCQQuestions.map((scqItem, index) => (
                 <Typography variant="h6">
@@ -355,22 +438,26 @@ const QuizMainBodyNew = () => {
                 Previous
               </Button>
 
-              {studentSCQQuestions.length - 1 === scqQuestionIndex ? (
+              <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  style={{textTransform: "none"}}
+                  onClick={() => nextQuestion()}
+                disabled={studentSCQQuestions.length - 1 === scqQuestionIndex ? true : false}
+                >
+                  Next
+                </Button>
+
+              {/* {studentSCQQuestions.length - 1 === scqQuestionIndex ? (
                 <Link
-                  // variant="contained"
-                  // size="small"
-                  // color="success"
-                  // // href={"/summary"}
-                  // to={"/summary"}
-                  // state={{studentSCQQuestions, score}}
-                  component="button"
                   style={{
                     textDecoration: "none",
                     backgroundColor: "green",
                     color: "#fff",
-                    padding: 4,
-                    borderRadius: 5,
-                    fontSize: 15, border: "none"
+                    padding: 6,
+                    borderRadius: 3,
+                    fontSize: 12,
                   }}
                   to={{
                     pathname: "/summary",
@@ -389,13 +476,194 @@ const QuizMainBodyNew = () => {
                 >
                   Next
                 </Button>
-              )}
+              )} */}
             </Paper>
           </Grid>
         </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}></TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <Grid item xs={12} sx={{textAlign: "left", marginBottom: 2}}>
+            <Paper elevation={1} className={classes.quizDetailsLayout}>
+              <Typography variant="body2" color="primary">
+                Question {bqQuestionIndex + 1}/{studentBQQuestions.length}
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                {studentBQQuestions.map((item, index) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      height: 30,
+                      width: 35,
+                      alignItems: "center",
+                      marginRight: 5,
+                      marginBottom: 5,
+                      borderRadius: 5,
+                      border: "solid thin",
+                      cursor: "pointer",
+                      fontSize: 12,
+                      backgroundColor:
+                        index === bqQuestionIndex
+                          ? "greenyellow"
+                          : "transparent",
+                    }}
+                    onClick={() => setBqQuestionIndex(index)}
+                  >
+                    <div> {index + 1} </div>
+
+                    {bqQuiz.map((item) =>
+                      item.bqIndex === index ? (
+                        <div>
+                          <CheckCircleOutlineIcon
+                            color="success"
+                            sx={{fontSize: 12}}
+                          />
+                        </div>
+                      ) : null
+                    )}
+                  </div>
+                ))}
+              </Stack>
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            {studentBQQuestions &&
+              studentBQQuestions.map((bqItem, index) => (
+                <Typography variant="h6">
+                  {index === bqQuestionIndex ? (
+                    <Paper
+                      elevation={1}
+                      className={classes.quizDetailsLayout}
+                      sx={{marginBottom: 2}}
+                      key={index}
+                    >
+                      {bqQuestionIndex + 1}.{ReactHtmlParser(bqItem.question)}
+                      <Divider />
+                      {bqQuiz.some(
+                        (item) =>
+                          item.bqIndex === bqQuestionIndex &&
+                          item.optionSelected === "true"
+                      ) ? (
+                        <Chip
+                          label="True"
+                          color="success"
+                          sx={{marginTop: 2, marginRight: 3}}
+                        />
+                      ) : (
+                        <Chip
+                          label="True"
+                          variant="outlined"
+                          sx={{marginTop: 2, marginRight: 3}}
+                          onClick={() =>
+                            selectBQOption(bqQuestionIndex, "true")
+                          }
+                        />
+                      )}
+                      {bqQuiz.some(
+                        (item) =>
+                          item.bqIndex === bqQuestionIndex &&
+                          item.optionSelected === "false"
+                      ) ? (
+                        <Chip
+                          label="False"
+                          color="success"
+                          sx={{marginTop: 2}}
+                        />
+                      ) : (
+                        <Chip
+                          label="False"
+                          variant="outlined"
+                          sx={{marginTop: 2, marginRight: 3}}
+                          onClick={() =>
+                            selectBQOption(bqQuestionIndex, "false")
+                          }
+                        />
+                      )}
+                    </Paper>
+                  ) : null}
+                </Typography>
+              ))}
+          </Grid>
+          <Grid item xs={12}>
+            <Paper
+              elevation={3}
+              className={classes.quizDetailsLayout}
+              sx={{display: "flex", justifyContent: "space-between"}}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                style={{textTransform: "none"}}
+                onClick={() => previousBqQuestion()}
+                disabled={bqQuestionIndex === 0 ? true : false}
+              >
+                Previous
+              </Button>
+
+              <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  style={{textTransform: "none"}}
+                  onClick={() => nextBqQuestion()}
+                disabled={studentBQQuestions.length - 1 === bqQuestionIndex ? true : false}
+                >
+                  Next
+                </Button>
+
+              {/* {studentBQQuestions.length - 1 === bqQuestionIndex ? (
+                <Link
+                  style={{
+                    textDecoration: "none",
+                    backgroundColor: "green",
+                    color: "#fff",
+                    padding: 6,
+                    borderRadius: 3,
+                    fontSize: 12,
+                  }}
+                  // to={{
+                  //   pathname: "/summary",
+                  //   state: {studentSCQQuestions, scqQuiz, score},
+                  // }}
+                >
+                  Done with T/F
+                </Link>
+              ) : (
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  style={{textTransform: "none"}}
+                  onClick={() => nextBqQuestion()}
+                >
+                  Next
+                </Button> 
+              )}*/}
+            </Paper>
+          </Grid>
+        </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}></TabPanel>
       </SwipeableViews>
+      <Grid item xs={12}>
+        <Link
+          style={{
+            textDecoration: "none",
+            backgroundColor: "green",
+            color: "#fff",
+            padding: 10,
+            borderRadius: 3,
+            fontSize: 15,
+            display:"grid",
+            justifyContent:"center"
+          }}
+          to={{
+            pathname: "/summary",
+            state: {studentSCQQuestions, scqQuiz, score, studentBQQuestions, bqQuiz, bqScore, classId, quizId, userID},
+          }}
+        >
+          Submit Exam
+        </Link>
+      </Grid>
     </>
   );
 };

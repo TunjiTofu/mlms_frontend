@@ -6,10 +6,27 @@ const addStudentScore = () => ({
 });
 
 const getStudentScore = (score) => ({
-    type: ActionTypes.GET_STUDENT_SCORE,
-    payload: score,
-  });
-  
+  type: ActionTypes.GET_STUDENT_SCORE,
+  payload: score,
+});
+
+export const submitStudentScoreInitiate = (content) => {
+  return function (dispatch) {
+    console.log("Contentsssss ", content);
+    const newId = content.userId + "-" + content.quizId;
+    db.scores
+      .doc(newId)
+      .set(content)
+      .then(() => {
+        console.log("Score Data inserted");
+      })
+      .catch(() => {
+        console.log("Error inserting score data");
+      });
+
+    dispatch(addStudentScore());
+  };
+};
 
 export const addStudentScoreInitiate = (content) => {
   return function (dispatch) {
@@ -143,18 +160,19 @@ export const addStudentScoreInitiate = (content) => {
   };
 };
 
-
 export const getStudentScoreInitiate = (quizId, userId) => {
-    return function (dispatch) {
-        const id = userId+"-"+quizId
-      db.scores
-        .doc(id)
-        .onSnapshot({includeMetadataChanges: true}, (querySnapshot) => {
-          if (querySnapshot.exists) {
-            dispatch(getStudentScore({...querySnapshot.data(), id: querySnapshot.id}));
-          } else {
-            console.log("No Score Found!");
-          }
-        }); 
-    };
+  return function (dispatch) {
+    const id = userId + "-" + quizId;
+    db.scores
+      .doc(id)
+      .onSnapshot({includeMetadataChanges: true}, (querySnapshot) => {
+        if (querySnapshot.exists) {
+          dispatch(
+            getStudentScore({...querySnapshot.data(), id: querySnapshot.id})
+          );
+        } else {
+          console.log("No Score Found!");
+        }
+      });
   };
+};
