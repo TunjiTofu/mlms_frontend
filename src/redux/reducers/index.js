@@ -8,6 +8,7 @@ import classQuizzesReducer from "./classQuizzesReducer";
 import postCommentsReducer from "./postCommentsReducer";
 import scoreReducers from "./scoreReducers";
 import scqReducer from "./scqReducers";
+import theoryReducer from "./theoryReducers";
 import userReducer from "./userReducer";
 // import {classReducer} from "./classReducer";
 // import { userReducer } from "./userReducer";
@@ -26,6 +27,7 @@ const reducers = combineReducers({
   dbUser: userReducer,
   selectedSCQQuestions: scqReducer,
   selectedBQQuestions: bqReducer,
+  selectedTheoryQuestions: theoryReducer,
   studentQuizScore: scoreReducers,
 });
 
