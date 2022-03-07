@@ -121,7 +121,6 @@ const QuizMainBodyNew = () => {
   const [theoryQuestionIndex, setTheoryQuestionIndex] = useState(0);
 
   useEffect(() => {
-    // if (studentSCQQuestions && studentSCQQuestions) {
     dispatch(getQuizDetailsInitiate(quizId));
 
     dispatch(getRandomSCQInitiate(quizId, selectedClassQuizDetails.noqScq));
@@ -130,16 +129,10 @@ const QuizMainBodyNew = () => {
       getRandomTheoryInitiate(quizId, selectedClassQuizDetails.noqTheory)
     );
 
-    console.log("Allll Student SCQ ", studentSCQQuestions);
-    console.log("Allll Student BQ ", studentBQQuestions);
-    console.log("Allll Student Theory ", studentTheoryQuestions);
-    // }
-    // if (studentBQQuestions && studentBQQuestions) {
-    // dispatch(getQuizDetailsInitiate(quizId));
-
-    //   console.log("Allll Student BQ ", studentBQQuestions);
-    //   dispatch(getRandomBQInitiate(quizId, selectedClassQuizDetails.noqBq));
-    // }
+    // console.log("Allll Student SCQ ", studentSCQQuestions);
+    // console.log("Allll Student BQ ", studentBQQuestions);
+    // console.log("Allll Student Theory ", studentTheoryQuestions);
+   
     return () => {
       dispatch(resetSCQQuestionsInitiate());
       dispatch(resetBQQuestionsInitiate());
@@ -223,22 +216,11 @@ const QuizMainBodyNew = () => {
     }, 200);
   };
 
-  const [theoryAns, setTheoryAns] = useState('');
-
-  // const handleTheoryAns = (e) => {
-  //   setTheoryAns({
-  //     ans: e.target.value,
-  //     id: theoryQuestionIndex
-  //   })
-  // }
+  const [theoryAns, setTheoryAns] = useState("");
 
   // useEffect(() => {
-  //   console.log("Theoryyyy", theoryAns);
-  // }, [theoryQuestionIndex]);
-
-  useEffect(() => {
-    console.log("T/FFF", bqQuiz);
-  }, [bqQuiz]);
+  //   console.log("T/FFF", bqQuiz);
+  // }, [bqQuiz]);
 
   const previousQuestion = () => {
     if (scqQuestionIndex === 0) return;
@@ -250,10 +232,10 @@ const QuizMainBodyNew = () => {
     setBqQuestionIndex(bqQuestionIndex - 1);
   };
 
-  const previousTheoryQuestion = () => {
-    if (theoryQuestionIndex === 0) return;
-    setTheoryQuestionIndex(theoryQuestionIndex - 1);
-  };
+  // const previousTheoryQuestion = () => {
+  //   if (theoryQuestionIndex === 0) return;
+  //   setTheoryQuestionIndex(theoryQuestionIndex - 1);
+  // };
 
   const nextQuestion = () => {
     if (studentSCQQuestions.length - 1 === scqQuestionIndex) return;
@@ -265,10 +247,10 @@ const QuizMainBodyNew = () => {
     setBqQuestionIndex(bqQuestionIndex + 1);
   };
 
-  const nextTheoryQuestion = () => {
-    if (studentTheoryQuestions.length - 1 === theoryQuestionIndex) return;
-    setTheoryQuestionIndex(theoryQuestionIndex + 1);
-  };
+  // const nextTheoryQuestion = () => {
+  //   if (studentTheoryQuestions.length - 1 === theoryQuestionIndex) return;
+  //   setTheoryQuestionIndex(theoryQuestionIndex + 1);
+  // };
 
   const checkScore = () => {
     const questionAnswered = scqQuiz.filter((item) => item.optionSelected);
@@ -311,7 +293,7 @@ const QuizMainBodyNew = () => {
 
   const history = useHistory();
 
-  const MINUTES = 0.1 * 60;
+  const MINUTES = 10 * 60;
   const time = new Date();
   time.setSeconds(time.getSeconds() + MINUTES); // 10 minutes timer
 
@@ -320,7 +302,7 @@ const QuizMainBodyNew = () => {
     minutes,
     hours,
     // days,
-    isRunning,
+    // isRunning,
     // start,
     // pause,
     // resume,
@@ -328,24 +310,26 @@ const QuizMainBodyNew = () => {
   } = useTimer({
     expiryTimestamp: time,
     onExpire: () =>
-      // setTimeout(() => {
-      // alert("Time Up")
-      // history.push({
-      //   pathname: "/summary",
-      //   state: {
-      //     studentSCQQuestions,
-      //     scqQuiz,
-      //     score,
-      //     studentBQQuestions,
-      //     bqQuiz,
-      //     bqScore,
-      //     classId,
-      //     quizId,
-      //     userID,
-      //   },
-      // });
-      // }, 1000)
-      null,
+      setTimeout(() => {
+        alert("Time Up");
+        history.push({
+          pathname: "/summary",
+          state: {
+            studentSCQQuestions,
+            scqQuiz,
+            score,
+            studentBQQuestions,
+            bqQuiz,
+            bqScore,
+            classId,
+            quizId,
+            userID,
+            theoryAns,
+            studentTheoryQuestions,
+          },
+        });
+      }, 1000),
+    // null,
 
     // null,
 
@@ -835,82 +819,24 @@ const QuizMainBodyNew = () => {
               </Paper>
             </Grid>
             <Grid item xs={12}>
-              {studentTheoryQuestions &&
-                studentTheoryQuestions.map((theoryItem, index) => (
-                  <Typography variant="h6">
-                    {index === theoryQuestionIndex ? (
-                      <Paper
-                        elevation={1}
-                        className={classes.quizDetailsLayout}
-                        sx={{marginBottom: 2}}
-                        key={index}
-                      >
-                        {/* {theoryQuestionIndex + 1}. */}
-                        {ReactHtmlParser(theoryItem.question)}
-                        <Chip
-                          label={`${theoryItem.score} marks`}
-                          variant="outlined"
-                          color="primary"
-                          sx={{marginBottom: 1}}
-                        />
-                        <Divider />
-                        <TextField
-                          id="outlined-basic"
-                          label="You Answer Here..."
-                          variant="outlined"
-                          multiline
-                          rows={4}
-                          fullWidth
-                          sx={{marginTop: 1}}
-                          value={theoryAns}
-                          onChange={e => setTheoryAns(e.target.value)}
-                        />
-                        {/* {bqQuiz.some(
-                          (item) =>
-                            item.bqIndex === bqQuestionIndex &&
-                            item.optionSelected === "true"
-                        ) ? (
-                          <Chip
-                            label="True"
-                            color="success"
-                            sx={{marginTop: 2, marginRight: 3}}
-                          />
-                        ) : (
-                          <Chip
-                            label="True"
-                            variant="outlined"
-                            sx={{marginTop: 2, marginRight: 3}}
-                            onClick={() =>
-                              selectBQOption(bqQuestionIndex, "true")
-                            }
-                          />
-                        )}
-                        {bqQuiz.some(
-                          (item) =>
-                            item.bqIndex === bqQuestionIndex &&
-                            item.optionSelected === "false"
-                        ) ? (
-                          <Chip
-                            label="False"
-                            color="success"
-                            sx={{marginTop: 2}}
-                          />
-                        ) : (
-                          <Chip
-                            label="False"
-                            variant="outlined"
-                            sx={{marginTop: 2, marginRight: 3}}
-                            onClick={() =>
-                              selectBQOption(bqQuestionIndex, "false")
-                            }
-                          />
-                        )} */}
-                      </Paper>
-                    ) : null}
-                  </Typography>
-                ))}
+              {/* <TextField
+                // key={theoryItem.quizId}
+                // name={theoryItem.quizId}
+                // key={index}
+                // id={`theoryAns[${index}]`}
+                // label={`theoryAns[${index}]`}
+                variant="outlined"
+                multiline
+                rows={4}
+                fullWidth
+                sx={{marginTop: 1}}
+                value={theoryAns}
+                // onChange={handleTheoryAns(index)}
+              /> */}
+
+              {/* ) : null} */}
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <Paper
                 elevation={3}
                 className={classes.quizDetailsLayout}
@@ -942,10 +868,54 @@ const QuizMainBodyNew = () => {
                   Next
                 </Button>
               </Paper>
-            </Grid>
+            </Grid> */}
           </TabPanel>
         </SwipeableViews>
       </Grid>
+
+      {/* <Divider /> */}
+      <Grid item xs={12}>
+        <Paper
+          elevation={2}
+          sx={{margin: 2}}
+          className={classes.quizDetailsLayout}
+        >
+          <Typography variant="h6" sx={{fontWeight: "bold"}}>
+            Theory Questions
+          </Typography>
+          <Typography variant="body1">
+            {/* {index === theoryQuestionIndex ? ( */}
+
+            {studentTheoryQuestions &&
+              studentTheoryQuestions.map((theoryItem, index) => (
+                <div key={index}>
+                  <div style={{fontWeight: "bold"}}>Question {index + 1}.</div>
+
+                  {ReactHtmlParser(theoryItem.question)}
+                  <Chip
+                    label={`${theoryItem.score} marks`}
+                    variant="outlined"
+                    color="primary"
+                    sx={{marginBottom: 1}}
+                  />
+                  <Divider />
+                </div>
+              ))}
+          </Typography>
+
+          <TextField
+            label="You Answer Here..."
+            variant="outlined"
+            multiline
+            rows={4}
+            fullWidth
+            sx={{marginTop: 1}}
+            value={theoryAns}
+            onChange={(e) => setTheoryAns(e.target.value)}
+          />
+        </Paper>
+      </Grid>
+
       <Grid item xs={12}>
         <Link
           style={{
@@ -970,11 +940,23 @@ const QuizMainBodyNew = () => {
               classId,
               quizId,
               userID,
+              theoryAns,
+              studentTheoryQuestions,
             },
           }}
         >
           Submit Exam
         </Link>
+        {/* <TextField
+          label="You Answer Here..."
+          variant="outlined"
+          multiline
+          rows={4}
+          fullWidth
+          sx={{marginTop: 1}}
+          value={theoryAns}
+          onChange={(e) => setTheoryAns(e.target.value)}
+        /> */}
       </Grid>
     </>
   );

@@ -5,6 +5,10 @@ const addStudentScore = () => ({
   type: ActionTypes.ADD_SCORE,
 });
 
+const addStudentTheory = () => ({
+  type: ActionTypes.SUBMIT_THEORY_ANSWERS,
+});
+
 const getStudentScore = (score) => ({
   type: ActionTypes.GET_STUDENT_SCORE,
   payload: score,
@@ -25,6 +29,24 @@ export const submitStudentScoreInitiate = (content) => {
       });
 
     dispatch(addStudentScore());
+  };
+};
+
+export const submitStudentTheoryAnsInitiate = (content) => {
+  return function (dispatch) {
+    console.log("Theory Contentsssss ", content);
+    const newId = content.userId + "-" + content.quizId;
+    db.theoryAnswers
+      .doc(newId)
+      .set(content)
+      .then(() => {
+        console.log("Theory Data inserted");
+      })
+      .catch(() => {
+        console.log("Error inserting Thoery data");
+      });
+
+    dispatch(addStudentTheory());
   };
 };
 
