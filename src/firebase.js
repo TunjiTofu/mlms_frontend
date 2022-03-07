@@ -38,6 +38,7 @@ export const db = {
   questBQ: dataB.collection("questionsBq"),
   questTHEORY: dataB.collection("questionsTheory"),
   scores: dataB.collection("scores"),
+  theoryAnswers: dataB.collection("theoryAnswers"),
   getCurrentTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
 };
 
