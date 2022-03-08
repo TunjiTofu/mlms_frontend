@@ -6,6 +6,7 @@ import {db} from "../../../firebase";
 import {getQuizDetailsInitiate} from "../../../redux/actions/quizAction";
 import {submitStudentScoreInitiate} from "../../../redux/actions/scoreActions";
 import {submitStudentTheoryAnsInitiate} from "../../../redux/actions/scoreActions";
+import { getSingleUserInitiate } from "../../../redux/actions/userActions";
 
 const QuizSummary = () => {
   const {state} = useLocation();
@@ -14,6 +15,10 @@ const QuizSummary = () => {
 
   const {selectedClassQuizDetails} = useSelector(
     (state) => state.selectedClassQuizzes
+  );
+
+  const {singleUser} = useSelector(
+    (state) => state.dbUser
   );
 
   const formData = {
@@ -34,14 +39,17 @@ const QuizSummary = () => {
     theoryAns: state.theoryAns,
     theoryQuest: state.studentTheoryQuestions,
   };
-  console.log("Form Data", formData);
-  console.log("Theory Data", theoryAnsData);
-  dispatch(submitStudentScoreInitiate(formData));
-  dispatch(submitStudentTheoryAnsInitiate(theoryAnsData));
+ 
   
 
   useEffect(() => {
+    console.log("Form Data", formData);
+    console.log("Theory Data", theoryAnsData);
+    dispatch(submitStudentScoreInitiate(formData));
+    dispatch(submitStudentTheoryAnsInitiate(theoryAnsData));
+    
     dispatch(getQuizDetailsInitiate(state.quizId));
+    dispatch(getSingleUserInitiate(state.userID))
   }, []);
 
   return (
@@ -50,8 +58,8 @@ const QuizSummary = () => {
         Exam Summary
       </Typography>
       <Typography variant="body1">Class Id: {state.classId}</Typography>
-      <Typography variant="body1">Quiz Id: {state.quizId}</Typography>
-      <Typography variant="body1">User Id: {state.userID}</Typography>
+      <Typography variant="body1">Quiz Id: {selectedClassQuizDetails.title}</Typography>
+      <Typography variant="body1">User Id: {singleUser.sname}, {singleUser.oname}</Typography>
       <p></p>
       <Typography variant="h6" color="primary" sx={{fontWeight: "bold"}}>
         Objective Exam
