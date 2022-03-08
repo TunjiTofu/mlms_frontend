@@ -16,7 +16,7 @@ import {ActionTypes} from "../constants/action-types";
 
 const initialState = {
   allUsers: [],
-  singleUSer: {},
+  singleUser: {},
 };
 
 const userReducer = (state = initialState, {type, payload}) => {
@@ -29,7 +29,7 @@ const userReducer = (state = initialState, {type, payload}) => {
     case ActionTypes.GET_SINGLE_USER:
       return {
         ...state,
-        singleUSer: payload,
+        singleUser: payload,
       };
     case ActionTypes.RESET_ALL_USERS:
       return {
@@ -39,7 +39,7 @@ const userReducer = (state = initialState, {type, payload}) => {
     case ActionTypes.RESET_SINGLE_USER:
       return {
         ...state,
-        singleUSer: {},
+        singleUser: {},
       };
 
     default:
