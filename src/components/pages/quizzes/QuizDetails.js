@@ -94,7 +94,7 @@ function QuizDetails() {
             <b>Theory Questions: </b> {selectedClassQuizDetails.noqTheory}
           </Typography>
           <br />
-          <Button
+          {/* <Button
             variant="contained"
             color="success"
             component={Link}
@@ -102,7 +102,7 @@ function QuizDetails() {
             startIcon={<PlayCircleOutlinedIcon />}
           >
             Start Quiz
-          </Button>
+          </Button> */}
           <Button
             variant="contained"
             color="success"
@@ -110,7 +110,7 @@ function QuizDetails() {
             to={`/quizmainnew/${classId}/${quizId}`}
             startIcon={<PlayCircleOutlinedIcon />}
           >
-            Start New Quiz
+            Start Quiz
           </Button>
         </Paper>
       )}

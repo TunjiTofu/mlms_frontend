@@ -47,8 +47,8 @@ function Login({handleChange}) {
     setLoading(true);
     setLoading2(true);
     setTimeout(() => {
-      console.log(val.username);
-      console.log(val.password);
+      // console.log(val.username);
+      // console.log(val.password);
       login(val.username, val.password) 
         .then(() => {
           history.push("/dashboardn");

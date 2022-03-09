@@ -8,7 +8,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Stack,
   Typography,
 } from "@mui/material";
 import {Link, useParams} from "react-router-dom";
@@ -17,8 +16,8 @@ import {getClassDetailsInitiate} from "../../../redux/actions/classActions";
 import ModuleMenuItems from "./ModuleMenuItems";
 
 function ModuleMenuBar() {
-  const [className, setClassName] = useState("");
-  const [classLoading, setClassLoading] = useState(false);
+  // const [className, setClassName] = useState("");
+  // const [classLoading, setClassLoading] = useState(false);
   const [classLoadingInfo, setClassLoadingInfo] = useState(false);
   const [moduleLoading, setModuleLoading] = useState(false);
   const [ModuleLoadingError, setModuleLoadingError] = useState(false);

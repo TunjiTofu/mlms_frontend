@@ -1,8 +1,6 @@
 import React from "react";
 import {useStylesPages} from "../../../Styles/PageStyles";
 import {useParams} from "react-router-dom";
-import {Box} from "@mui/system";
-import {Grid, Paper} from "@mui/material";
 import QuizMainHeader from "./QuizMainHeader";
 import QuizMainBody from "./QuizMainBody";
 

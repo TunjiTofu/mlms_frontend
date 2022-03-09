@@ -1,15 +1,12 @@
 import {
-  Alert,
   Divider,
   Grid,
   List,
   ListItem,
   ListItemText,
-  Stack,
-  Typography,
 } from "@mui/material";
 import { format } from "date-fns";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {Link, useParams} from "react-router-dom";
 import { getClassModulesInitiate, resetSelectedClassModuleInitiate } from "../../../redux/actions/moduleActions";
@@ -17,7 +14,7 @@ import {useStylesPages} from "../../../Styles/PageStyles";
 
 function ModuleTitle() {
   const {classId} = useParams();
-  const modulesDet = useRef([]);
+  // const modulesDet = useRef([]);
   const classes = useStylesPages();
 
   const dispatch = useDispatch();

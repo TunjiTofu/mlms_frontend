@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Card, CardContent, Divider, Grid, Typography} from "@mui/material";
 import {format} from "date-fns";
-import ReactHtmlParser from "react-html-parser";
 
 import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,7 +10,7 @@ import {
 } from "../../../redux/actions/modulePostsActions";
 
 function PostTitle() {
-  const [postDet, setPostDet] = useState("");
+  // const [postDet, setPostDet] = useState("");
   const [classColor, setClassColor] = useState("");
 
   // const {classDetails} = useSelector((state) => state.selectedClassDetails);
