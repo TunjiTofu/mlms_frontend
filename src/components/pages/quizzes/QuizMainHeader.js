@@ -1,5 +1,5 @@
 import {Button, Grid, Paper, Typography} from "@mui/material";
-import {Box} from "@mui/system";
+// import {Box} from "@mui/system";
 import React from "react";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,8 +9,8 @@ import {
   resetQuizDetailsInitiate,
 } from "../../../redux/actions/quizAction";
 import {useStylesPages} from "../../../Styles/PageStyles";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import CountDownTimer from "./CountDownTimer";
+// import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+// import CountDownTimer from "./CountDownTimer";
 
 const QuizMainHeader = () => {
   const {classId} = useParams();

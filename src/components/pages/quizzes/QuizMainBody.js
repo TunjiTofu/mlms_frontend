@@ -4,7 +4,6 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
-  FormLabel,
   Grid,
   Paper,
   Radio,
@@ -30,17 +29,12 @@ import {
 } from "../../../redux/actions/scqActions";
 import {getQuizDetailsInitiate} from "../../../redux/actions/quizAction";
 import ReactHtmlParser from "react-html-parser";
-
-import MobileStepper from "@mui/material/MobileStepper";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import FormErrors from "../../FormErrors";
 import {addStudentScoreInitiate} from "../../../redux/actions/scoreActions";
 import {db} from "../../../firebase";
 import {useAuth} from "../../../context/AuthContext";
 import * as Yup from "yup";
-import {string} from "yup";
 import {
   getRandomBQInitiate,
   resetBQQuestionsInitiate,

@@ -1,4 +1,4 @@
-import {Grid, Stack, List, ListItem, ListItemText} from "@mui/material";
+import {Grid, Stack} from "@mui/material";
 import {Link, useParams} from "react-router-dom";
 import React from "react";
 import Paper from "@mui/material/Paper";

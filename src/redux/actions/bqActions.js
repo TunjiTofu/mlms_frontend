@@ -22,7 +22,7 @@ export const getRandomBQInitiate = (id, maxQuest) => {
           //Loopong to get unique random number based not more than the document size to serve as indexes
           while (selectedBQQuestId.length < maxQuest) {
             var randomBQDocId = Math.floor(Math.random() * docSize);
-            console.log("New Rand BQ Id", randomBQDocId);
+            // console.log("New Rand BQ Id", randomBQDocId);
 
             // if (!selectedBQQuestId.includes(randomBQDocId)) {
             if (selectedBQQuestId.indexOf(randomBQDocId) === -1) {
@@ -30,22 +30,22 @@ export const getRandomBQInitiate = (id, maxQuest) => {
             }
           }
 
-          console.log("Unique Array Elements", selectedBQQuestId);//Unique array elements
+          // console.log("Unique Array Elements", selectedBQQuestId);//Unique array elements
 
           //The unique array elements is used as index to pull question out
           selectedBQQuestId.forEach(function (entry) {
-            console.log("My BQ entry", entry);
+            // console.log("My BQ entry", entry);
             bqQuestionsToStud.push({
               ...querySnapshot.docs[entry].data(),
               bqQuestionId: querySnapshot.docs[entry].id,
             });
 
             const docId = querySnapshot.docs[entry].id;
-            console.log("Unique BQ Doc -ID", docId);
+            // console.log("Unique BQ Doc -ID", docId);
           });
 
 
-          console.log("Selected bq questions for each studnet", bqQuestionsToStud);
+          // console.log("Selected bq questions for each studnet", bqQuestionsToStud);
           dispatch(getRandomBq(bqQuestionsToStud));
 
         } else {

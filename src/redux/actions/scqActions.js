@@ -49,7 +49,7 @@ export const getRandomSCQInitiate = (id, maxQuest) => {
           //Loopong to get unique random number based not more than the document size to serve as indexes
           while (selectedQuestId.length < maxQuest) {
             var randomDocId = Math.floor(Math.random() * docSize);
-            console.log("New Rand Id", randomDocId);
+            // console.log("New Rand Id", randomDocId);
 
             // if (!selectedQuestId.includes(randomDocId)) {
             if (selectedQuestId.indexOf(randomDocId) === -1) {
@@ -57,22 +57,22 @@ export const getRandomSCQInitiate = (id, maxQuest) => {
             }
           }
 
-          console.log("Unique Array Elements", selectedQuestId);//Unique array elements
+          // console.log("Unique Array Elements", selectedQuestId);//Unique array elements
 
           //The unique array elements is used as index to pull question out
           selectedQuestId.forEach(function (entry) {
-            console.log("My entry", entry);
+            // console.log("My entry", entry);
             scqQuestionsToStud.push({
               ...querySnapshot.docs[entry].data(),
               scqQuestionId: querySnapshot.docs[entry].id,
             });
 
             const docId = querySnapshot.docs[entry].id;
-            console.log("Unique Doc -ID", docId);
+            // console.log("Unique Doc -ID", docId);
           });
 
 
-          console.log("Selected scq questions for each studnet", scqQuestionsToStud);
+          // console.log("Selected scq questions for each studnet", scqQuestionsToStud);
           dispatch(getRandomScq(scqQuestionsToStud));
 
         } else {

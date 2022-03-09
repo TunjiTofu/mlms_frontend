@@ -16,7 +16,7 @@ const getStudentScore = (score) => ({
 
 export const submitStudentScoreInitiate = (content) => {
   return function (dispatch) {
-    console.log("Contentsssss ", content);
+    // console.log("Contentsssss ", content);
     const newId = content.userId + "-" + content.quizId;
     db.scores
       .doc(newId)
@@ -34,7 +34,7 @@ export const submitStudentScoreInitiate = (content) => {
 
 export const submitStudentTheoryAnsInitiate = (content) => {
   return function (dispatch) {
-    console.log("Theory Contentsssss ", content);
+    // console.log("Theory Contentsssss ", content);
     const newId = content.userId + "-" + content.quizId;
     db.theoryAnswers
       .doc(newId)
@@ -80,7 +80,7 @@ export const addStudentScoreInitiate = (content) => {
               // stdScore[index] = 1;
             }
           }
-          console.log("Final Student Score Array", stdScqScore);
+          // console.log("Final Student Score Array", stdScqScore);
           //   console.log("Final ------ score Length", stdScqScore.length);
         });
       //   }
@@ -95,13 +95,13 @@ export const addStudentScoreInitiate = (content) => {
     });
 
     content.bqAnswers.forEach(function (entry, index) {
-      console.log("My BQ entry", entry.id);
+      // console.log("My BQ entry", entry.id);
       // const wordArray = entry.id.split("-");
       // console.log("Word BQ Array 0", wordArray[0]);
       // console.log("Word BQ Array 1", wordArray[1]);
 
       // if (wordArray[1] === "bq") {
-      console.log("Doneeeeeeeeeeee");
+      // console.log("Doneeeeeeeeeeee");
       db.questBQ
         .doc(entry.id)
         .get()

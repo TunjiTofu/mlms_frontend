@@ -31,7 +31,7 @@ export const getParentCommentsInitiate = (id) => {
 
             db.users.doc(userId).onSnapshot((document) => {
               const userName = document.data().displayName;
-              console.log("User Nameeeee", userName);
+              // console.log("User Nameeeee", userName);
 
               ParentComments.push({
                 ...doc.data(),

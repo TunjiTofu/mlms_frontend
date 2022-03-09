@@ -1,22 +1,12 @@
 import {
-  Alert,
-  AlertTitle,
   Button,
   Chip,
   Divider,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  FormLabel,
   Grid,
-  Modal,
   Paper,
-  Radio,
-  RadioGroup,
   Stack,
   Tab,
   Tabs,
-  TextField,
   Typography,
 } from "@mui/material";
 import React, {useEffect, useState} from "react";
@@ -31,7 +21,6 @@ import {getQuizDetailsInitiate} from "../../../redux/actions/quizAction";
 import {
   getRandomSCQInitiate,
   resetSCQQuestionsInitiate,
-  selectOptionInitiate,
 } from "../../../redux/actions/scqActions";
 import {useStylesPages} from "../../../Styles/PageStyles";
 import ReactHtmlParser from "react-html-parser";
@@ -42,7 +31,6 @@ import {
 } from "../../../redux/actions/bqActions";
 import {useTimer} from "react-timer-hook";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import Popup from "react-popup";
 import {
   getRandomTheoryInitiate,
   resetTheoryQuestionsInitiate,
@@ -396,7 +384,7 @@ const QuizMainBodyNew = () => {
         </Grid>
         <Grid item xs={12} md={5}>
           <Paper elevation={3} className={classes.quizDetailsLayout}>
-            <p>
+            {/* <p>
               <Button
                 variant="contained"
                 color="error"
@@ -405,10 +393,8 @@ const QuizMainBodyNew = () => {
               >
                 Quit Test
               </Button>
-            </p>
+            </p> */}
             <Typography variant="h2" color="primary">
-              {/* Timer: {hours}:
-        {minutes}:{seconds} */}
               <AccessTimeOutlinedIcon sx={{fontSize: 50}} />
               {hours}:{minutes}:{seconds}
             </Typography>

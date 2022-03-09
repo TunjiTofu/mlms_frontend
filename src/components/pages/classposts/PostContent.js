@@ -1,11 +1,6 @@
 import {
   Alert,
-  Avatar,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
   Grid,
   Typography,
 } from "@mui/material";
@@ -13,11 +8,11 @@ import SendIcon from "@mui/icons-material/Send";
 import React, {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import {db} from "../../../firebase";
-import ReactHtmlParser from "react-html-parser";
+// import ReactHtmlParser from "react-html-parser";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {Box} from "@mui/system";
-import {format} from "date-fns";
+// import {Box} from "@mui/system";
+// import {format} from "date-fns";
 //   import PostTitleBar from "./classposts/PostTitleBar";
 import {useAuth} from "../../../context/AuthContext";
 import PostTitleBar from "./PostTitleBar";
@@ -29,25 +24,25 @@ import ModuleMenuItems from "../classmodules/ModuleMenuItems";
 
 function PostContent() {
   const {currentUser} = useAuth();
-  const {classId, moduleId} = useParams();
-  const postDet = useRef([]);
-  const [forceUpdate, setForceUpdate] = useState(Date.now());
+  // const {classId, moduleId} = useParams();
+  // const postDet = useRef([]);
+  // const [forceUpdate, setForceUpdate] = useState(Date.now());
   const [replyError, setReplyError] = useState(false);
   const [replySuccess, setReplySuccess] = useState(false);
   const [replyLoading, setReplyLoading] = useState(false);
-  const [sendPostId, setSendPostId] = useState("");
+  // const [sendPostId, setSendPostId] = useState("");
   //   const [postDetails, setPostDetails] = useState([]);
-  const [className, setClassName] = useState("");
-  const [classColor, setClassColor] = useState("");
-  const [classLoadingInfo, setClassLoadingInfo] = useState(false);
-  const [classError, setClassError] = useState("");
+  // const [className, setClassName] = useState("");
+  // const [classColor, setClassColor] = useState("");
+  // const [classLoadingInfo, setClassLoadingInfo] = useState(false);
+  // const [classError, setClassError] = useState("");
 
-  const [moduleName, setModuleName] = useState("");
-  const [moduleLoadingInfo, setModuleLoadingInfo] = useState(false);
-  const [moduleError, setModuleError] = useState("");
+  // const [moduleName, setModuleName] = useState("");
+  // const [moduleLoadingInfo, setModuleLoadingInfo] = useState(false);
+  // const [moduleError, setModuleError] = useState("");
 
-  const [commentLoadingInfo, setCommentLoadingInfo] = useState(false);
-  const postCommentsParent = useRef([]);
+  // const [commentLoadingInfo, setCommentLoadingInfo] = useState(false);
+  // const postCommentsParent = useRef([]);
 
   const [reply, setReply] = useState("");
 

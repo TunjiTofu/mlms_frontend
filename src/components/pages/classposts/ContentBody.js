@@ -1,5 +1,5 @@
 import {Card, CardContent, Divider, Grid, Typography} from "@mui/material";
-import {format} from "date-fns";
+// import {format} from "date-fns";
 import React, {useEffect, useState} from "react";
 import ReactHtmlParser from "react-html-parser";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,7 +10,7 @@ import {
 } from "../../../redux/actions/modulePostsActions";
 
 function ContentBody() {
-  const [postDet, setPostDet] = useState("");
+  // const [postDet, setPostDet] = useState("");
   const [classColor, setClassColor] = useState("");
 
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function ContentBody() {
   );
 
   useEffect(() => {
-    console.log("postId ID ", postId);
+    // console.log("postId ID ", postId);
 
     if (selectedPostDetails && selectedPostDetails !== "")
       dispatch(getPostDetailsInitiate(postId));

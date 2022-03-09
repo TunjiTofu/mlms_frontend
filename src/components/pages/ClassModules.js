@@ -1,23 +1,23 @@
-import {
-  Alert,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
+// import {
+//   Alert,
+//   Divider,
+//   Grid,
+//   List,
+//   ListItem,
+//   ListItemText,
+//   Stack,
+//   Typography,
+// } from "@mui/material";
 import React, {useEffect, useRef, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {db} from "../../firebase";
 import {useStylesPages} from "../../Styles/PageStyles";
 import Paper from "@mui/material/Paper";
 import {styled} from "@mui/material/styles";
 import ModuleMenuBar from "./classmodules/ModuleMenuBar";
 import ModuleTitle from "./classmodules/ModuleTitle";
-import { useDispatch } from "react-redux";
-import { getClassDetailsInitiate } from "../../redux/actions/classActions";
+// import { useDispatch } from "react-redux";
+// import { getClassDetailsInitiate } from "../../redux/actions/classActions";
 
 function ClassModules() {
   const {classId} = useParams();

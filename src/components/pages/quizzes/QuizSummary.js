@@ -48,8 +48,8 @@ const QuizSummary = () => {
   
 
   useEffect(() => {
-    console.log("Form Data", formData);
-    console.log("Theory Data", theoryAnsData);
+    // console.log("Form Data", formData);
+    // console.log("Theory Data", theoryAnsData);
     dispatch(submitStudentScoreInitiate(formData));
     dispatch(submitStudentTheoryAnsInitiate(theoryAnsData));
 

@@ -4,7 +4,7 @@ function swDev() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register(swURL)
-        .then((res) => console.log("Service Worker Registered", res))
+        .then((res) => console.log("SW", res))
         .catch((err) => console.log("Service Worker not registeed", err));
     }
   }
