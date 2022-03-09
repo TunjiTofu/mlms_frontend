@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useLocation, useHistory} from "react-router-dom";
 import {db} from "../../../firebase";
+import { getClassDetailsInitiate } from "../../../redux/actions/classActions";
 import {getQuizDetailsInitiate} from "../../../redux/actions/quizAction";
 import {submitStudentScoreInitiate} from "../../../redux/actions/scoreActions";
 import {submitStudentTheoryAnsInitiate} from "../../../redux/actions/scoreActions";
@@ -19,6 +20,10 @@ const QuizSummary = () => {
 
   const {singleUser} = useSelector(
     (state) => state.dbUser
+  );
+
+  const {classDetails} = useSelector(
+    (state) => state.selectedClassDetails
   );
 
   const formData = {
@@ -47,9 +52,10 @@ const QuizSummary = () => {
     console.log("Theory Data", theoryAnsData);
     dispatch(submitStudentScoreInitiate(formData));
     dispatch(submitStudentTheoryAnsInitiate(theoryAnsData));
-    
+
     dispatch(getQuizDetailsInitiate(state.quizId));
     dispatch(getSingleUserInitiate(state.userID))
+    dispatch(getClassDetailsInitiate(state.classId))
   }, []);
 
   return (
@@ -57,9 +63,9 @@ const QuizSummary = () => {
       <Typography variant="h5" color="primary" sx={{fontWeight: "bold"}}>
         Exam Summary
       </Typography>
-      <Typography variant="body1">Class Id: {state.classId}</Typography>
-      <Typography variant="body1">Quiz Id: {selectedClassQuizDetails.title}</Typography>
-      <Typography variant="body1">User Id: {singleUser.sname}, {singleUser.oname}</Typography>
+      <Typography variant="body1" color="secondary"><b>Name:</b> {singleUser.sname}, {singleUser.oname}</Typography>
+      <Typography variant="body1" color="secondary"><b>Class:</b> {classDetails.name}</Typography>
+      <Typography variant="body1" color="secondary"><b>Quiz:</b> {selectedClassQuizDetails.title}</Typography>
       <p></p>
       <Typography variant="h6" color="primary" sx={{fontWeight: "bold"}}>
         Objective Exam
@@ -106,7 +112,7 @@ const QuizSummary = () => {
         Theory Exam
       </Typography>
       <Typography variant="body1" color="green">
-        You Theory score would be uploaded by your teacher
+        You Theory score would be uploaded by the teacher
       </Typography>
       {/* <div> Theory Answers</div>
       {state.theoryAns} */}

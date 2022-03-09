@@ -47,6 +47,8 @@ import {
   getRandomTheoryInitiate,
   resetTheoryQuestionsInitiate,
 } from "../../../redux/actions/theoryActions";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const QuizMainBodyNew = () => {
   const {classId} = useParams();
@@ -132,7 +134,7 @@ const QuizMainBodyNew = () => {
     // console.log("Allll Student SCQ ", studentSCQQuestions);
     // console.log("Allll Student BQ ", studentBQQuestions);
     // console.log("Allll Student Theory ", studentTheoryQuestions);
-   
+
     return () => {
       dispatch(resetSCQQuestionsInitiate());
       dispatch(resetBQQuestionsInitiate());
@@ -348,6 +350,20 @@ const QuizMainBodyNew = () => {
     // }),
   });
 
+  const modules = {
+    toolbar: [
+      [{font: []}],
+      [{size: ["small", false, "large", "huge"]}],
+      ["bold", "italic", "underline"],
+      // ["bold", "italic", "underline", "link"],
+      [{list: "ordered"}, {list: "bullet"}],
+      [{align: []}],
+      [{color: []}],
+      // [{color: []}, {background: []}],
+      ["clean"],
+    ],
+  };
+
   return (
     <>
       <Grid container spacing={1}>
@@ -410,7 +426,7 @@ const QuizMainBodyNew = () => {
           >
             <Tab label="Objective" {...a11yProps(0)} />
             <Tab label="True/False" {...a11yProps(1)} />
-            <Tab label="Theory" {...a11yProps(2)} />
+            {/* <Tab label="Theory" {...a11yProps(2)} /> */}
           </Tabs>
         </Box>
 
@@ -768,7 +784,7 @@ const QuizMainBodyNew = () => {
               </Paper>
             </Grid>
           </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
+          {/* <TabPanel value={value} index={2} dir={theme.direction}>
             <Grid item xs={12} sx={{textAlign: "left", marginBottom: 2}}>
               <Paper elevation={1} className={classes.quizDetailsLayout}>
                 <Typography
@@ -803,73 +819,13 @@ const QuizMainBodyNew = () => {
                     >
                       <div> {index + 1} </div>
 
-                      {/* {theoryQuiz.map((item) =>
-                        item.bqIndex === index ? (
-                          <div>
-                            <CheckCircleOutlineIcon
-                              color="success"
-                              sx={{fontSize: 12}}
-                            />
-                          </div>
-                        ) : null
-                      )} */}
+                    
                     </div>
                   ))}
                 </Stack>
               </Paper>
             </Grid>
-            <Grid item xs={12}>
-              {/* <TextField
-                // key={theoryItem.quizId}
-                // name={theoryItem.quizId}
-                // key={index}
-                // id={`theoryAns[${index}]`}
-                // label={`theoryAns[${index}]`}
-                variant="outlined"
-                multiline
-                rows={4}
-                fullWidth
-                sx={{marginTop: 1}}
-                value={theoryAns}
-                // onChange={handleTheoryAns(index)}
-              /> */}
-
-              {/* ) : null} */}
-            </Grid>
-            {/* <Grid item xs={12}>
-              <Paper
-                elevation={3}
-                className={classes.quizDetailsLayout}
-                sx={{display: "flex", justifyContent: "space-between"}}
-              >
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                  style={{textTransform: "none"}}
-                  onClick={() => previousTheoryQuestion()}
-                  disabled={theoryQuestionIndex === 0 ? true : false}
-                >
-                  Previous
-                </Button>
-
-                <Button
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  style={{textTransform: "none"}}
-                  onClick={() => nextTheoryQuestion()}
-                  disabled={
-                    studentTheoryQuestions.length - 1 === theoryQuestionIndex
-                      ? true
-                      : false
-                  }
-                >
-                  Next
-                </Button>
-              </Paper>
-            </Grid> */}
-          </TabPanel>
+          </TabPanel> */}
         </SwipeableViews>
       </Grid>
 
@@ -880,7 +836,7 @@ const QuizMainBodyNew = () => {
           sx={{margin: 2}}
           className={classes.quizDetailsLayout}
         >
-          <Typography variant="h6" sx={{fontWeight: "bold"}}>
+          <Typography variant="h6" color="primary" sx={{fontWeight: "bold"}}>
             Theory Questions
           </Typography>
           <Typography variant="body1">
@@ -903,6 +859,16 @@ const QuizMainBodyNew = () => {
               ))}
           </Typography>
 
+          <Typography variant="h6" color="secondary"><b>Answer Sheet</b></Typography>
+          <ReactQuill
+            theme="snow"
+            modules={modules}
+            // formats={formats}
+            onChange={setTheoryAns}
+            value={theoryAns}
+            placeholder="Your Answer Here..."
+          />
+          {/* 
           <TextField
             label="You Answer Here..."
             variant="outlined"
@@ -912,7 +878,7 @@ const QuizMainBodyNew = () => {
             sx={{marginTop: 1}}
             value={theoryAns}
             onChange={(e) => setTheoryAns(e.target.value)}
-          />
+          /> */}
         </Paper>
       </Grid>
 
