@@ -210,8 +210,9 @@ function ContentCommentStream() {
                       size="small"
                       startIcon={<CommentOutlinedIcon />}
                       onClick={handleParentComm(commentParentItem.id)}
+                      style={{textTransform: "none"}}
                     >
-                      Comments
+                      View Comments
                     </Button>
                     <Button
                       aria-label="settings"
@@ -219,6 +220,7 @@ function ContentCommentStream() {
                       size="small"
                       startIcon={<SendOutlinedIcon />}
                       onClick={handleOpen(commentParentItem.id)}
+                      style={{textTransform: "none"}}
                     >
                       Reply
                     </Button>

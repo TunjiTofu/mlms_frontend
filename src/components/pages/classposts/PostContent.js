@@ -159,8 +159,9 @@ function PostContent() {
               size="small"
               endIcon={<SendIcon />}
               onClick={submitPost}
+              style={{textTransform: "none"}}
             >
-              Reply
+              Post Reply
             </Button>
           </Grid>
         </Grid>
